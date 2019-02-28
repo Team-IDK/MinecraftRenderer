@@ -72,10 +72,10 @@ public class MinecraftDriver {
                 glRotatef(0f + roll, 0 + yaw, 0 + pitch, 1);
                 glBegin(GL_QUADS);
                     glColor3f(1.0f,1.0f,0.0f);
-                    glVertex3f( 10.0f,-10.0f,-10.0f);
-                    glVertex3f(-10.0f,-10.0f,-10.0f);
-                    glVertex3f(-10.0f, 10.0f,-10.0f);
-                    glVertex3f( 10.0f, 10.0f,-10.0f);
+                    glVertex3f( 1.0f,-1.0f,-1.0f);
+                    glVertex3f(-1.0f,-1.0f,-1.0f);
+                    glVertex3f(-1.0f, 1.0f,-1.0f);
+                    glVertex3f( 1.0f, 1.0f,-1.0f);
                 glEnd();
                 
                 glBegin(GL_POINTS);
