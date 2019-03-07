@@ -1,28 +1,26 @@
 /***************************************************************
 * file: MinecraftDriver.java
-* author: Team IDK
+* author: Team NULL - Kyle Hubbard
 * class: CS 4450 - Computer Graphics
 *
 * assignment: final program
-* date last modified: 2/27/2019
+* date last modified: 3/5/2019
 *
 * purpose: This program is the main class for the MincraftRenderer and it
-* handles controlling the entire rendering process
+* acts as the entry point for the entire rendering process
 *
 ****************************************************************/
 
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import static org.lwjgl.opengl.GL11.*;
+import org.lwjgl.util.glu.GLU;
 
 public class MinecraftDriver {
     
-    private final int SCREEN_WIDTH = 640, SCREEN_HEIGHT = 480;
-    private int mouseX, mouseY;
-    private float dx, dy, dz, pitch, yaw, roll;
-
+    private FPCameraController fp = new FPCameraController(0, 0, 0);
+    private DisplayMode displayMode;
+    
     // method: start
     // purpose: this method calls all of the necessary rendering functions
     public void start() {
@@ -30,34 +28,42 @@ public class MinecraftDriver {
         try {
             createWindow();
             initGL();
-            render();
+            fp.gameLoop();
         } catch(Exception e) {
-            e.printStackTrace();
+            System.out.println(e);
         }
     }
 
     // method: createWindow
-    // purpose: this method creates the display stage and sets its dimensions
-    private void createWindow() throws Exception{
+    // purpose: this method creates the display stage and assigns the display mode
+    private void createWindow() throws Exception {
         
         Display.setFullscreen(false);
-        Display.setDisplayMode(new DisplayMode(640, 480));
-        Display.setTitle("Team IDK - Minecraft");
+        DisplayMode d[] = Display.getAvailableDisplayModes();
+        for(int i = 0; i < d.length; i++) {
+            if(d[i].getWidth() == 640 && d[i].getHeight() == 480 && d[i].getBitsPerPixel() == 32) {
+                displayMode = d[i];
+                break;
+            }
+        }
+        Display.setDisplayMode(displayMode);
+        Display.setTitle("Team NULL - Minecraft Renderer");
         Display.create();
     }
 
     // method: initGL
-    // purpose: this method initializes the background color, camera, ortho matrix, and etc
+    // purpose: this method initializes the matrix mode, matrix model, and perspective attributes
     private void initGL() {
         
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        glOrtho(0, SCREEN_WIDTH, 0, SCREEN_HEIGHT, 1, -1);
+        GLU.gluPerspective(100.0f, (float)displayMode.getWidth() / (float)displayMode.getHeight(), 0.1f, 300.0f);
         glMatrixMode(GL_MODELVIEW);
         glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
     }
     
+<<<<<<< HEAD
     // method: render
     // purpose: this method handles calling the appropriate rendering functions
     private void render() {
@@ -146,6 +152,8 @@ public class MinecraftDriver {
         System.out.printf("Mouse X: %d | Mouse Y: %d\n", mouseX, mouseY);
     }
     
+=======
+>>>>>>> master
     // method: main
     // purpose: this method creates a new MinecraftDriver object and calls its start method
     public static void main(String[] args) {
