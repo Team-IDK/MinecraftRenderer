@@ -4,7 +4,7 @@
 * class: CS 4450 - Computer Graphics
 *
 * assignment: final program
-* date last modified: 3/5/2019
+* date last modified: 3/7/2019
 *
 * purpose: This program is the main class for the FPCameraController and it
 * controls all of the first person viewing functionality such as the camera,
@@ -22,11 +22,11 @@ import org.lwjgl.Sys;
 public class FPCameraController {
     
     private Vector3f position;
-    private Vector3f lastPosition;
-    private Vector3Float player;
+    private Vector3f lookPosition;
     private float yaw, pitch;
     
     private FPCameraController camera;
+    private WorldBuilder builder;
     private float movementSpeed;
     private float mouseSensitivity;
     
@@ -35,7 +35,9 @@ public class FPCameraController {
     public FPCameraController(float x, float y, float z) {
         
         position = new Vector3f(x, y, z);
-        lastPosition = new Vector3f(0f, 15f, 0f);
+        lookPosition = new Vector3f(0f, 15f, 0f);
+        
+        builder = new WorldBuilder();
         movementSpeed = 0.05f;
         mouseSensitivity = 0.09f;
     }
@@ -144,38 +146,14 @@ public class FPCameraController {
     }
         
     // method: render
-    // purpose: this method contains all of the primitives to be drawn
+    // purpose: this method calls WorldBuilder methods to draw primitives
     private void render() {
-
-        try {
-            glBegin(GL_QUADS);
-                glColor3f(1.0f, 0.0f, 1.0f);
-                glVertex3f( 1.0f,-1.0f, -1.0f);
-                glVertex3f(-1.0f,-1.0f, -1.0f);
-                glVertex3f(-1.0f, 1.0f, -1.0f);
-                glVertex3f( 1.0f, 1.0f, -1.0f);
-            glEnd();
-            
-            glBegin(GL_LINES);
-                glColor3f(1.0f, 0.0f, 0.0f);
-                glVertex3f(20.0f, 0.0f, 0.0f);
-                glVertex3f(-20.0f, 0.0f, 0.0f);
-                
-                glColor3f(0.0f, 1.0f, 0.0f);
-                glVertex3f(0.0f, 20.0f, 0.0f);
-                glVertex3f(0.0f, -20.0f, 0.0f);
-                
-                glColor3f(0.0f, 0.0f, 1.0f);
-                glVertex3f(0.0f, 0.0f, 20.0f);
-                glVertex3f(0.0f, 0.0f, -20.0f);
-            glEnd();
-        } catch(Exception e) {
-            System.out.println(e);
-        }
+        builder.drawCube();
+        builder.drawGrid();
     }
     
     // method: gameLoop
-    // purpose: this method facilitates the main rendering loop
+    // purpose: this method facilitates the main program loop
     public void gameLoop() {
         
         camera = new FPCameraController(0, 0, 0);
@@ -206,18 +184,5 @@ public class FPCameraController {
         }
         
         Display.destroy();
-    }
-    
-    // class: Vector3Float
-    // purpose: this class acts as a vector object
-    public class Vector3Float {
-        
-        public float x, y, z;
-        
-        public Vector3Float(int x, int y, int z) {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-        }
     }
 }
