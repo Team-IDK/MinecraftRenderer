@@ -148,8 +148,8 @@ public class FPCameraController {
     // method: render
     // purpose: this method calls WorldBuilder methods to draw primitives
     private void render() {
-        builder.drawCube();
         builder.drawGrid();
+        builder.drawCube();
     }
     
     // method: gameLoop

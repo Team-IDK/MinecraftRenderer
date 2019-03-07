@@ -117,6 +117,8 @@ public class WorldBuilder {
         }
     }
     
+    // method: drawGrid
+    // purpose: this method draws a reference grid
     public void drawGrid() {
         
         try {
