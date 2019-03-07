@@ -6,7 +6,7 @@
 * assignment: final program
 * date last modified: 3/7/2019
 *
-* purpose: This program handles the rendering of primitives to be used
+* purpose: This program handles rendering the primitives to be used
 * in the FPCameraController class.
 *
 ****************************************************************/
