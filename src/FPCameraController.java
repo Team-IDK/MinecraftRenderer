@@ -23,7 +23,7 @@ public class FPCameraController {
     
     private Vector3f position;
     private Vector3f lookPosition;
-    private float yaw, pitch;
+    private float yaw, pitch, dx, dy;
     
     private FPCameraController camera;
     private WorldBuilder builder;
@@ -39,7 +39,7 @@ public class FPCameraController {
         
         builder = new WorldBuilder();
         movementSpeed = 0.05f;
-        mouseSensitivity = 0.09f;
+        mouseSensitivity = 0.075f;
     }
     
     // method: rotateYaw
@@ -51,7 +51,15 @@ public class FPCameraController {
     // method: rotatePitch
     // purpose: this method rotates about the u axis
     public void rotatePitch(float amount) {
+        
         pitch -= amount;
+        //Clamp vertical view angle to 180 degrees of motion
+        if(pitch < -90) {
+            pitch = -90;
+        }
+        if(pitch > 90) {
+            pitch = 90;
+        }
     }
     
     // method: walkForward
@@ -115,6 +123,15 @@ public class FPCameraController {
         glTranslatef(position.x, position.y, position.z);
     }
     
+    //method: processMouseInput
+    //purpose: this method handles the user's mouse movements
+    public void processMouseInput() {
+        dx = Mouse.getDX();
+        dy = Mouse.getDY();
+        camera.rotateYaw(dx * mouseSensitivity);
+        camera.rotatePitch(dy * mouseSensitivity);
+    }
+    
     // method: processKeyboardInput
     // purpose: this method handles the user's keyboard inputs
     public void processKeyboardInput() {
@@ -157,7 +174,7 @@ public class FPCameraController {
     public void gameLoop() {
         
         camera = new FPCameraController(0, 0, 0);
-        float dx, dy, dt, lastTime;
+        float lastTime;
         long time = 0;
         Mouse.setGrabbed(true);
         
@@ -166,11 +183,7 @@ public class FPCameraController {
             time = Sys.getTime();
             lastTime = time;
             
-            dx = Mouse.getDX();
-            dy = Mouse.getDY();
-            camera.rotateYaw(dx * mouseSensitivity);
-            camera.rotatePitch(dy * mouseSensitivity);
-            
+            processMouseInput();
             processKeyboardInput();
             
             glLoadIdentity();
