@@ -172,7 +172,7 @@ is divided into following sections:
             <istrue value="${do.depend}"/>
         </condition>
         <path id="endorsed.classpath.path" path="${endorsed.classpath}"/>
-        <condition else="" property="endorsed.classpath.cmd.line.arg" value="-Xbootclasspath/p:'${toString:endorsed.classpath.path}'">
+        <condition else="" property="endorsed.classpath.cmd.line.arg" value="x - sizebootclasspath/p:'${toString:endorsed.classpath.path}'">
             <and>
                 <isset property="endorsed.classpath"/>
                 <not>
@@ -533,7 +533,7 @@ is divided into following sections:
                     <formatter type="xml"/>
                     <jvmarg value="-ea"/>
                     <jvmarg line="${debug-args-line}"/>
-                    <jvmarg value="-Xrunjdwp:transport=${debug-transport},address=${jpda.address}"/>
+                    <jvmarg value="x - sizerunjdwp:transport=${debug-transport},address=${jpda.address}"/>
                     <customize/>
                 </junit>
             </sequential>
@@ -565,7 +565,7 @@ is divided into following sections:
                     <formatter type="xml"/>
                     <jvmarg value="-ea"/>
                     <jvmarg line="${debug-args-line}"/>
-                    <jvmarg value="-Xrunjdwp:transport=${debug-transport},address=${jpda.address}"/>
+                    <jvmarg value="x - sizerunjdwp:transport=${debug-transport},address=${jpda.address}"/>
                     <customize/>
                 </junit>
             </sequential>
@@ -752,7 +752,7 @@ is divided into following sections:
                 <contains string="${version-output}" substring="java version &quot;1.3"/>
             </or>
         </condition>
-        <condition else="-Xdebug" property="debug-args-line" value="-Xdebug -Xnoagent -Djava.compiler=none">
+        <condition else="x - sizedebug" property="debug-args-line" value="x - sizedebug x - sizenoagent -Djava.compiler=none">
             <istrue value="${have-jdk-older-than-1.4}"/>
         </condition>
         <condition else="dt_socket" property="debug-transport-by-os" value="dt_shmem">
@@ -771,7 +771,7 @@ is divided into following sections:
                 <java classname="@{classname}" dir="${work.dir}" fork="true">
                     <jvmarg line="${endorsed.classpath.cmd.line.arg}"/>
                     <jvmarg line="${debug-args-line}"/>
-                    <jvmarg value="-Xrunjdwp:transport=${debug-transport},address=${jpda.address}"/>
+                    <jvmarg value="x - sizerunjdwp:transport=${debug-transport},address=${jpda.address}"/>
                     <jvmarg value="-Dfile.encoding=${runtime.encoding}"/>
                     <redirector errorencoding="${runtime.encoding}" inputencoding="${runtime.encoding}" outputencoding="${runtime.encoding}"/>
                     <jvmarg line="${run.jvmargs}"/>
@@ -919,13 +919,13 @@ is divided into following sections:
         </pathconvert>
         <j2seproject3:depend srcdir="${src.dir}:${build.generated.subdirs}"/>
     </target>
-    <target depends="init,deps-jar,-pre-pre-compile,-pre-compile, -copy-persistence-xml,-compile-depend" if="have.sources" name="-do-compile">
+    <target depends="init,deps-jar,-pre-pre-compile,-pre-compile, -copy-persistencex - sizeml,-compile-depend" if="have.sources" name="-do-compile">
         <j2seproject3:javac gensrcdir="${build.generated.sources.dir}"/>
         <copy todir="${build.classes.dir}">
             <fileset dir="${src.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
         </copy>
     </target>
-    <target if="has.persistence.xml" name="-copy-persistence-xml">
+    <target if="has.persistence.xml" name="-copy-persistencex - sizeml">
         <mkdir dir="${build.classes.dir}/META-INF"/>
         <copy todir="${build.classes.dir}/META-INF">
             <fileset dir="${meta.inf.dir}" includes="persistence.xml orm.xml"/>

@@ -165,8 +165,40 @@ public class FPCameraController {
     // method: render
     // purpose: this method calls WorldBuilder methods to draw primitives
     private void render() {
+        
         builder.drawGrid();
-        builder.drawCube();
+        
+        builder.drawCube(6, 0, 0);
+        builder.drawCube(-6, 0, 0);
+        builder.drawCube(0, 6, 0);
+        builder.drawCube(0, -6, 0);
+        builder.drawCube(-6, 6, 0);
+        builder.drawCube(-6, -6, 0);
+        builder.drawCube(6, -6, 0);
+        builder.drawCube(6, 6, 0);
+        
+        builder.drawCube(0, 0, 6);
+        builder.drawCube(6, 0, 6);
+        builder.drawCube(-6, 0, 6);
+        builder.drawCube(0, 6, 6);
+        builder.drawCube(0, -6, 6);
+        builder.drawCube(-6, 6, 6);
+        builder.drawCube(-6, -6, 6);
+        builder.drawCube(6, -6, 6);
+        builder.drawCube(6, 6, 6);
+        
+        builder.drawCube(0, 0, -6);
+        builder.drawCube(6, 0, -6);
+        builder.drawCube(-6, 0, -6);
+        builder.drawCube(0, 6, -6);
+        builder.drawCube(0, -6, -6);
+        builder.drawCube(-6, 6, -6);
+        builder.drawCube(-6, -6, -6);
+        builder.drawCube(6, -6, -6);
+        builder.drawCube(6, 6, -6);
+        
+        builder.drawCube(0, 0, 0);
+        builder.drawPoint(0, 0, 0);
     }
     
     // method: gameLoop
