@@ -7,7 +7,7 @@
 * date last modified: 3/5/2019
 *
 * purpose: This program is the main class for the MincraftRenderer and it
-* acts as the entry point for the entire rendering process
+* acts as the entry point for the entire rendering process.
 *
 ****************************************************************/
 
