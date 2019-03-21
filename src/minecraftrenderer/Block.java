@@ -1,3 +1,15 @@
+/**
+* file: Block.java
+* author: Team NULL - Michael Wono
+* class: CS 4450 - Computer Graphics
+*
+* assignment: final program
+* date last modified: 3/21/2019
+*
+* purpose: Stores basic information for each Block
+* Specifically: Type, active, and coordinates
+* 
+ */
 package minecraftrenderer;
 
 public class Block {
