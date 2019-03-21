@@ -4,12 +4,14 @@
 * class: CS 4450 - Computer Graphics
 *
 * assignment: final program
-* date last modified: 3/5/2019
+* date last modified: 3/12/2019
 *
 * purpose: This program is the main class for the MincraftRenderer and it
-* acts as the entry point for the entire rendering process
+* acts as the entry point for the entire rendering process.
 *
 ****************************************************************/
+
+package minecraftrenderer;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;

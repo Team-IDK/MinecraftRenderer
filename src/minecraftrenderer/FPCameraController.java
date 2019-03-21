@@ -4,13 +4,15 @@
 * class: CS 4450 - Computer Graphics
 *
 * assignment: final program
-* date last modified: 3/7/2019
+* date last modified: 3/12/2019
 *
 * purpose: This program is the main class for the FPCameraController and it
 * controls all of the first person viewing functionality such as the camera,
 * normalization, clipping, and etc.
 *
 ****************************************************************/
+
+package minecraftrenderer;
 
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.input.Keyboard;
@@ -165,8 +167,40 @@ public class FPCameraController {
     // method: render
     // purpose: this method calls WorldBuilder methods to draw primitives
     private void render() {
+        
         builder.drawGrid();
-        builder.drawCube();
+        
+        builder.drawCube(6, 0, 0);
+        builder.drawCube(-6, 0, 0);
+        builder.drawCube(0, 6, 0);
+        builder.drawCube(0, -6, 0);
+        builder.drawCube(-6, 6, 0);
+        builder.drawCube(-6, -6, 0);
+        builder.drawCube(6, -6, 0);
+        builder.drawCube(6, 6, 0);
+        
+        builder.drawCube(0, 0, 6);
+        builder.drawCube(6, 0, 6);
+        builder.drawCube(-6, 0, 6);
+        builder.drawCube(0, 6, 6);
+        builder.drawCube(0, -6, 6);
+        builder.drawCube(-6, 6, 6);
+        builder.drawCube(-6, -6, 6);
+        builder.drawCube(6, -6, 6);
+        builder.drawCube(6, 6, 6);
+        
+        builder.drawCube(0, 0, -6);
+        builder.drawCube(6, 0, -6);
+        builder.drawCube(-6, 0, -6);
+        builder.drawCube(0, 6, -6);
+        builder.drawCube(0, -6, -6);
+        builder.drawCube(-6, 6, -6);
+        builder.drawCube(-6, -6, -6);
+        builder.drawCube(6, -6, -6);
+        builder.drawCube(6, 6, -6);
+        
+        builder.drawCube(0, 0, 0);
+        builder.drawPoint(0, 0, 0);
     }
     
     // method: gameLoop
@@ -189,6 +223,8 @@ public class FPCameraController {
             glLoadIdentity();
             camera.lookThrough();
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glEnable(GL_DEPTH_TEST);
+            glDepthFunc(GL_LESS);
             
             render();
             
