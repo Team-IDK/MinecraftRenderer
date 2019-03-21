@@ -223,6 +223,8 @@ public class FPCameraController {
             glLoadIdentity();
             camera.lookThrough();
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            glEnableClientState(GL_VERTEX_ARRAY);
+            glEnableClientState(GL_COLOR_ARRAY);
             glEnable(GL_DEPTH_TEST);
             glDepthFunc(GL_LESS);
             
