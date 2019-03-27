@@ -6,8 +6,8 @@
 * assignment: final program
 * date last modified: 3/27/2019
 *
-* purpose: to bundle up a number of blocks together and then only make
-* a single call to the renderer for each chunk.
+* purpose: Data structure to bundle up a number of blocks together
+* and then only make a single call to the renderer for each chunk.
 * 
 ****************************************************************/
 
@@ -19,7 +19,6 @@ import minecraftrenderer.noise.SimplexNoise;
 import org.lwjgl.BufferUtils;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
-
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
@@ -28,17 +27,19 @@ public class Chunk {
     
     static final int CHUNK_SIZE = 30;
     static final int CUBE_LENGTH = 2;
+    
     private Block[][][] Blocks;
+    private Texture texture;
     private int VBOVertexHandle;
     private int VBOColorHandle;
-    private int StartX, StartY, StartZ;
+    private int VBOTextureHandle;
     
+    private int StartX, StartY, StartZ;
     private int seed;
     private Random r;
     
-    private int VBOTextureHandle;
-    private Texture texture;
-    
+    // method: Chunk
+    // purpose: this constructor generates the chunk data
     public Chunk(int startX, int startY, int startZ) {
         
         try {
@@ -56,49 +57,49 @@ public class Chunk {
                 for(int z = 0; z < CHUNK_SIZE; z++) {
                     if (r.nextFloat() > 0.8f) {
                         Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Grass);
-                    }
-                    else if (r.nextFloat() > 0.65f) {
+                    } else if (r.nextFloat() > 0.65f) {
                         Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Dirt);
-                    }
-                    else if (r.nextFloat() > 0.5f) {
+                    } else if (r.nextFloat() > 0.5f) {
                         Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Sand);
-                    }
-                    else if (r.nextFloat() > 0.35f) {
+                    } else if (r.nextFloat() > 0.35f) {
                         Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Water);
-                    }
-                    else if (r.nextFloat() > 0.2f) {
+                    } else if (r.nextFloat() > 0.2f) {
                         Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Stone);
-                    }
-                    else {
+                    } else {
                         Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Bedrock);
                     }
                 }
             }
         }
-        // End of for loops
+        
         VBOColorHandle = glGenBuffers();
         VBOVertexHandle = glGenBuffers();
         VBOTextureHandle = glGenBuffers();
+        
         StartX = startX;
         StartY = startY;
         StartZ = startZ;
         rebuildMesh(startX, startY, startZ); 
     }
     
+    // method: render
+    // purpose: this method renders the various buffers
     public void render() {
+        
         glPushMatrix();
-        glPushMatrix();
-        glBindBuffer(GL_ARRAY_BUFFER, VBOVertexHandle);
-        glVertexPointer(3, GL_FLOAT, 0, 0L);
-        glBindBuffer(GL_ARRAY_BUFFER, VBOColorHandle);
-        glColorPointer(3, GL_FLOAT, 0, 0L);
-        glBindBuffer(GL_ARRAY_BUFFER, VBOTextureHandle);
-        glBindTexture(GL_TEXTURE_2D, 1);
-        glTexCoordPointer(2, GL_FLOAT, 0, 0L);
-        glDrawArrays(GL_QUADS, 0, CHUNK_SIZE*CHUNK_SIZE*CHUNK_SIZE*24);
+            glBindBuffer(GL_ARRAY_BUFFER, VBOVertexHandle);
+            glVertexPointer(3, GL_FLOAT, 0, 0L);
+            glBindBuffer(GL_ARRAY_BUFFER, VBOColorHandle);
+            glColorPointer(3, GL_FLOAT, 0, 0L);
+            glBindBuffer(GL_ARRAY_BUFFER, VBOTextureHandle);
+            glBindTexture(GL_TEXTURE_2D, 1);
+            glTexCoordPointer(2, GL_FLOAT, 0, 0L);
+            glDrawArrays(GL_QUADS, 0, CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE * 24);
         glPopMatrix();
     }
     
+    // method: rebuildMesh
+    // purpose: this method updates the block buffers and facilitates noise generation
     public void rebuildMesh(float startX, float startY, float startZ) {
         
         //START OF NOISE GENERATION
@@ -107,12 +108,14 @@ public class Chunk {
         VBOColorHandle = glGenBuffers();
         VBOVertexHandle = glGenBuffers();
         VBOTextureHandle = glGenBuffers();
+        
         FloatBuffer VertexPositionData = BufferUtils.createFloatBuffer(
-                (CHUNK_SIZE*CHUNK_SIZE*CHUNK_SIZE)*6*12);
+                (CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE) * 6 * 12);
         FloatBuffer VertexColorData = BufferUtils.createFloatBuffer(
-                (CHUNK_SIZE*CHUNK_SIZE*CHUNK_SIZE)*6*12);
+                (CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE) * 6 * 12);
         FloatBuffer VertexTextureData = BufferUtils.createFloatBuffer(
-                (CHUNK_SIZE*CHUNK_SIZE*CHUNK_SIZE)*6*12);
+                (CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE) * 6 * 12);
+        
         for(float x = 0; x < CHUNK_SIZE; x += 1) {
             for (float z = 0; z < CHUNK_SIZE; z += 1) {
                 for(float y = 0; y < CHUNK_SIZE; y++) {
@@ -127,10 +130,12 @@ public class Chunk {
                 }
             }
         }
+        
         // End of for loops
         VertexColorData.flip();
         VertexPositionData.flip();
         VertexTextureData.flip();
+        
         glBindBuffer(GL_ARRAY_BUFFER, VBOVertexHandle);
         glBufferData(GL_ARRAY_BUFFER, VertexPositionData, GL_STATIC_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -142,7 +147,10 @@ public class Chunk {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
     
+    // method: createCubeVertexCol
+    // purpose: this method generates the vertex color data for each cube
     private float[] createCubeVertexCol(float[] CubeColorArray) {
+        
         float[] cubeColors = new float[CubeColorArray.length * 4 * 6];
         
         for (int i = 0; i < cubeColors.length; i++) {
@@ -152,8 +160,12 @@ public class Chunk {
         return cubeColors;
     }
     
+    // method: createCube
+    // purpose: this method creates cubes using the given coordinates
     public static float[] createCube(float x, float y, float z) {
+        
         int offset = CUBE_LENGTH / 2;
+        
         return new float [] {
             // TOP QUAD
             x + offset, y + offset, z,
@@ -188,15 +200,19 @@ public class Chunk {
         };
     }
     
+    // method: getCubeColor
+    // purpose: this method returns the cube's color
     private float[] getCubeColor(Block block) {
         return new float[] {1, 1, 1};
     }
     
+    // method: createTexCube
+    // purpose: this method maps the texture sheet data to the cube based on the block ID
     public static float[] createTexCube(float x, float y, Block block) {
         
         float offset = (1024f/16) / 1024f;
         
-        switch(block.GetID()) {
+        switch(block.getID()) {
             
             // Grass
             case 0:
@@ -236,12 +252,12 @@ public class Chunk {
             // Sand
             case 1:
                 return new float[] {
-                    // BOTTOM QUAD(DOWN=+Y)
+                    // BOTTOM QUAD (DOWN=+Y)
                     x + offset*3, y + offset*2,
                     x + offset*2, y + offset*2,
                     x + offset*2, y + offset*1,
                     x + offset*3, y + offset*1,
-                    // TOP!
+                    // TOP
                     x + offset*3, y + offset*2,
                     x + offset*2, y + offset*2,
                     x + offset*2, y + offset*1,
@@ -271,12 +287,12 @@ public class Chunk {
             // Water
             case 2:
                 return new float[] {
-                    // BOTTOM QUAD(DOWN=+Y)
+                    // BOTTOM QUAD (DOWN=+Y)
                     x + offset*14, y + offset*13,
                     x + offset*13, y + offset*13,
                     x + offset*13, y + offset*12,
                     x + offset*14, y + offset*12,
-                    // TOP!
+                    // TOP
                     x + offset*14, y + offset*13,
                     x + offset*13, y + offset*13,
                     x + offset*13, y + offset*12,
@@ -306,12 +322,12 @@ public class Chunk {
             // Dirt
             case 3:
                 return new float[] {
-                    // BOTTOM QUAD(DOWN=+Y)
+                    // BOTTOM QUAD (DOWN=+Y)
                     x + offset*3, y + offset*1,
                     x + offset*2, y + offset*1,
                     x + offset*2, y + offset*0,
                     x + offset*3, y + offset*0,
-                    // TOP!
+                    // TOP
                     x + offset*3, y + offset*1,
                     x + offset*2, y + offset*1,
                     x + offset*2, y + offset*0,
@@ -341,12 +357,12 @@ public class Chunk {
             // Stone    
             case 4:
                 return new float[] {
-                    // BOTTOM QUAD(DOWN=+Y)
+                    // BOTTOM QUAD (DOWN=+Y)
                     x + offset*2, y + offset*1,
                     x + offset*1, y + offset*1,
                     x + offset*1, y + offset*0,
                     x + offset*2, y + offset*0,
-                    // TOP!
+                    // TOP
                     x + offset*2, y + offset*1,
                     x + offset*1, y + offset*1,
                     x + offset*1, y + offset*0,
@@ -376,12 +392,12 @@ public class Chunk {
             // Bedrock
             case 5:
                 return new float[] {
-                    // BOTTOM QUAD(DOWN=+Y)
+                    // BOTTOM QUAD (DOWN=+Y)
                     x + offset*2, y + offset*2,
                     x + offset*1, y + offset*2,
                     x + offset*1, y + offset*1,
                     x + offset*2, y + offset*1,
-                    // TOP!
+                    // TOP
                     x + offset*2, y + offset*2,
                     x + offset*1, y + offset*2,
                     x + offset*1, y + offset*1,
@@ -410,12 +426,12 @@ public class Chunk {
                     
             default:
                 return new float[] {
-                    // BOTTOM QUAD(DOWN=+Y)
+                    // BOTTOM QUAD (DOWN=+Y)
                     x + offset*1, y + offset*1,
                     x + offset*0, y + offset*1,
                     x + offset*0, y + offset*0,
                     x + offset*1, y + offset*0,
-                    // TOP!
+                    // TOP
                     x + offset*1, y + offset*1,
                     x + offset*0, y + offset*1,
                     x + offset*0, y + offset*0,
@@ -444,6 +460,8 @@ public class Chunk {
         }
     }
 
+    // method: generateSeed
+    // purpose: this method generates a random seed based on time
     private int generateSeed() {
         
         Random rand = new Random();

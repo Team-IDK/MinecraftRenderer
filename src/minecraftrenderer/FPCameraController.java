@@ -29,6 +29,7 @@ public class FPCameraController {
     
     private FPCameraController camera;
     private Chunk chunk;
+    
     private float movementSpeed;
     private float mouseSensitivity;
     
@@ -54,6 +55,7 @@ public class FPCameraController {
     public void rotatePitch(float amount) {
         
         pitch -= amount;
+        
         //Clamp vertical view angle to 180 degrees of motion
         if(pitch < -90) {
             pitch = -90;
@@ -127,6 +129,7 @@ public class FPCameraController {
     //method: processMouseInput
     //purpose: this method handles the user's mouse movements
     public void processMouseInput() {
+        
         dx = Mouse.getDX();
         dy = Mouse.getDY();
         camera.rotateYaw(dx * mouseSensitivity);

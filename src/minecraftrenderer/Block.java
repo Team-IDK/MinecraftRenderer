@@ -1,26 +1,28 @@
-/**
+/***************************************************************
 * file: Block.java
 * author: Team NULL - Michael Wono
 * class: CS 4450 - Computer Graphics
 *
 * assignment: final program
-* date last modified: 3/21/2019
+* date last modified: 3/27/2019
 *
-* purpose: Stores basic information for each Block
-* Specifically: Type, active, and coordinates
+* purpose: Data structure to store basic information for each block,
+* specifically the block's Type, active state, and coordinates.
 * 
- */
+****************************************************************/
+
 package minecraftrenderer;
 
 public class Block {
+    
     private boolean IsActive;
     private BlockType Type;
     private float x,y,z;
     
-    /**
-     * Enum to hold block type and ID
-     */
+    // enum: BlockType
+    // purpose: this method constructs the block with an intial type
     public enum BlockType {
+        
         BlockType_Grass(0),
         BlockType_Sand(1),
         BlockType_Water(2),
@@ -29,62 +31,55 @@ public class Block {
         BlockType_Bedrock(5);
         
         private int BlockID;
-        /**
-         * Constructor sets Block ID
-         * @param i ID of Block
-         */
+        
+        // method: BlockType
+        // purpose: this constructor sets the block ID
         BlockType(int i) {
             BlockID = i;
         }
-        /**
-         * @return Block ID
-         */
-        public int GetID() {
+        
+        // method: getID
+        // purpose: this method gets the block ID
+        public int getID() {
             return BlockID;
         }
-        /**
-         * @param i new ID of Block
-         */
-        public void SetID(int i) {
+        
+        // method: setID
+        // purpose: this method sets the block ID
+        public void setID(int i) {
             BlockID = i;
         }
     }
-    /**
-     * Initialize new Block
-     * @param t type of Block
-     */
+    
+    // method: Block
+    // purpose: this constructor sets the block with an intial type
     public Block(BlockType t) {
         Type = t;
     }
-    /**
-     * Block coordinates
-     * @param x x coordinate
-     * @param y y coordinate
-     * @param z z coordinate
-     */
-    public void SetCoords(float x, float y, float z) {
+    
+    // method: setCoords
+    // purpose: this method sets the block's coordinates
+    public void setCoords(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;
     }
-    /**
-     * @param a Set if Block is active or not
-     */
-    public void SetActive(boolean a) {
+    
+    // method: setActive
+    // purpose: this method sets the block's active state
+    public void setActive(boolean a) {
         IsActive = a;
     }
-    /**
-     * Returns active state of Block for rendering purposes
-     * @return True if Block is active, false if not
-     */
-    public boolean IsActive() {
+    
+    // method: isActive
+    // purpose: this method checks the block's active state
+    public boolean isActive() {
         return IsActive;
     }
-    /**
-     * ID of Block
-     * @return Block ID
-     */
-    public int GetID() {
-        return Type.GetID();
+    
+    // method: getID
+    // purpose: this method returns the block's Type ID
+    public int getID() {
+        return Type.getID();
     }
 }
