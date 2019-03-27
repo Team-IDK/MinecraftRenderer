@@ -4,7 +4,7 @@
 * class: CS 4450 - Computer Graphics
 *
 * assignment: final program
-* date last modified: 3/12/2019
+* date last modified: 3/27/2019
 *
 * purpose: This program is the main class for the FPCameraController and it
 * controls all of the first person viewing functionality such as the camera,
@@ -28,7 +28,7 @@ public class FPCameraController {
     private float yaw, pitch, dx, dy;
     
     private FPCameraController camera;
-    private WorldBuilder builder;
+    private Chunk chunk;
     private float movementSpeed;
     private float mouseSensitivity;
     
@@ -39,7 +39,6 @@ public class FPCameraController {
         position = new Vector3f(x, y, z);
         lookPosition = new Vector3f(0f, 15f, 0f);
         
-        builder = new WorldBuilder();
         movementSpeed = 0.05f;
         mouseSensitivity = 0.075f;
     }
@@ -163,51 +162,13 @@ public class FPCameraController {
             movementSpeed = 0.05f;
         }
     }
-        
-    // method: render
-    // purpose: this method calls WorldBuilder methods to draw primitives
-    private void render() {
-        
-        builder.drawGrid();
-        
-        builder.drawCube(6, 0, 0);
-        builder.drawCube(-6, 0, 0);
-        builder.drawCube(0, 6, 0);
-        builder.drawCube(0, -6, 0);
-        builder.drawCube(-6, 6, 0);
-        builder.drawCube(-6, -6, 0);
-        builder.drawCube(6, -6, 0);
-        builder.drawCube(6, 6, 0);
-        
-        builder.drawCube(0, 0, 6);
-        builder.drawCube(6, 0, 6);
-        builder.drawCube(-6, 0, 6);
-        builder.drawCube(0, 6, 6);
-        builder.drawCube(0, -6, 6);
-        builder.drawCube(-6, 6, 6);
-        builder.drawCube(-6, -6, 6);
-        builder.drawCube(6, -6, 6);
-        builder.drawCube(6, 6, 6);
-        
-        builder.drawCube(0, 0, -6);
-        builder.drawCube(6, 0, -6);
-        builder.drawCube(-6, 0, -6);
-        builder.drawCube(0, 6, -6);
-        builder.drawCube(0, -6, -6);
-        builder.drawCube(-6, 6, -6);
-        builder.drawCube(-6, -6, -6);
-        builder.drawCube(6, -6, -6);
-        builder.drawCube(6, 6, -6);
-        
-        builder.drawCube(0, 0, 0);
-        builder.drawPoint(0, 0, 0);
-    }
     
     // method: gameLoop
     // purpose: this method facilitates the main program loop
     public void gameLoop() {
         
-        camera = new FPCameraController(0, 0, 0);
+        camera = new FPCameraController(-30, -100, -30);
+        chunk = new Chunk(0, 0, 0);
         float lastTime;
         long time = 0;
         Mouse.setGrabbed(true);
@@ -228,7 +189,7 @@ public class FPCameraController {
             glEnable(GL_DEPTH_TEST);
             glDepthFunc(GL_LESS);
             
-            render();
+            chunk.render();
             
             Display.update();
             Display.sync(60);

@@ -1,3 +1,5 @@
+package minecraftrenderer.noise;
+
 import java.util.Random;
 
 public class SimplexNoise {

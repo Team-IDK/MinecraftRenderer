@@ -4,7 +4,7 @@
 * class: CS 4450 - Computer Graphics
 *
 * assignment: final program
-* date last modified: 3/12/2019
+* date last modified: 3/27/2019
 *
 * purpose: This program is the main class for the MincraftRenderer and it
 * acts as the entry point for the entire rendering process.
@@ -57,12 +57,14 @@ public class MinecraftDriver {
     // purpose: this method initializes the matrix mode, matrix model, and perspective attributes
     private void initGL() {
         
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glClearColor(0.443f, 0.737f, 0.867f, 0.0f);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
         GLU.gluPerspective(100.0f, (float)displayMode.getWidth() / (float)displayMode.getHeight(), 0.1f, 300.0f);
         glMatrixMode(GL_MODELVIEW);
         glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+        glEnable(GL_TEXTURE_2D);
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     }
     
     // method: main
