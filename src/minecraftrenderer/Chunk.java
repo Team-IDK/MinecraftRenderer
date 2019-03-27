@@ -120,9 +120,9 @@ public class Chunk {
             for (float z = 0; z < CHUNK_SIZE; z += 1) {
                 for(float y = 0; y < CHUNK_SIZE; y++) {
                     VertexPositionData.put(createCube(
-                            (float) (startX + x * CUBE_LENGTH),
-                            (float) (y * CUBE_LENGTH + (int) (CHUNK_SIZE * .8)),
-                            (float) (startZ + z * CUBE_LENGTH)));
+                        (float) (startX + x * CUBE_LENGTH),
+                        (float) (y * CUBE_LENGTH + (int) (CHUNK_SIZE * .8)),
+                        (float) (startZ + z * CUBE_LENGTH)));
                     VertexColorData.put(createCubeVertexCol(getCubeColor(
                         Blocks[(int) x][(int) y][(int) z])));
                     VertexTextureData.put(createTexCube((float) 0, (float) 0,

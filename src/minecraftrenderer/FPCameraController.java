@@ -170,11 +170,13 @@ public class FPCameraController {
     // purpose: this method facilitates the main program loop
     public void gameLoop() {
         
+        Mouse.setGrabbed(true);
+        
         camera = new FPCameraController(-30, -100, -30);
         chunk = new Chunk(0, 0, 0);
+        
         float lastTime;
         long time = 0;
-        Mouse.setGrabbed(true);
         
         while(!Display.isCloseRequested() && !Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
             
