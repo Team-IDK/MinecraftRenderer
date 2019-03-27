@@ -39,7 +39,7 @@ public class FPCameraController {
         position = new Vector3f(x, y, z);
         lookPosition = new Vector3f(0f, 15f, 0f);
         
-        movementSpeed = 0.1f;
+        movementSpeed = 0.05f;
         mouseSensitivity = 0.075f;
     }
     
@@ -157,9 +157,9 @@ public class FPCameraController {
         
         //Sprint Key on Left Mouse Click
         if(Mouse.isButtonDown(0)) {
-            movementSpeed = 0.3f;
+            movementSpeed = 0.2f;
         } else if(!Mouse.isButtonDown(0)) {
-            movementSpeed = 0.1f;
+            movementSpeed = 0.05f;
         }
     }
     
