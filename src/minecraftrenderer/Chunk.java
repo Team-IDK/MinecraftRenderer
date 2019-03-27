@@ -49,6 +49,7 @@ public class Chunk {
         
         seed = generateSeed();
         r = new Random();
+        
         Blocks = new Block[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE];
         for(int x = 0; x < CHUNK_SIZE; x++) {
             for(int y = 0; y < CHUNK_SIZE; y++) {
@@ -100,6 +101,7 @@ public class Chunk {
     
     public void rebuildMesh(float startX, float startY, float startZ) {
         
+        //START OF NOISE GENERATION
         SimplexNoise noise = new SimplexNoise(3, 1, seed);
         
         VBOColorHandle = glGenBuffers();
