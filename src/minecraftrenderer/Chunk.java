@@ -44,7 +44,7 @@ public class Chunk {
         try {
             texture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("res/terrain.png"));
         } catch(Exception e) {
-            System.out.print("Error loading texture source file.");
+            System.out.print("Error loading texture source file: " + e);
         }
         
         seed = generateSeed();
@@ -247,8 +247,8 @@ public class Chunk {
                     // FRONT QUAD
                     x + offset*2, y + offset*1,
                     x + offset*3, y + offset*1,
-                    x + offset*2, y + offset*2,
                     x + offset*3, y + offset*2,
+                    x + offset*2, y + offset*2,
                     // BACK QUAD
                     x + offset*3, y + offset*2,
                     x + offset*2, y + offset*2,
