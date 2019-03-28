@@ -27,6 +27,7 @@ public class Chunk {
     
     static final int CHUNK_SIZE = 30;
     static final int CUBE_LENGTH = 2;
+    private int startX, startY, startZ;
     
     private Block[][][] Blocks;
     private Texture texture;
@@ -34,13 +35,13 @@ public class Chunk {
     private int VBOColorHandle;
     private int VBOTextureHandle;
     
-    private int StartX, StartY, StartZ;
-    private int seed;
     private Random r;
-    
+    private int seed;
+    private SimplexNoise noise;
+
     // method: Chunk
     // purpose: this constructor generates the chunk data
-    public Chunk(int startX, int startY, int startZ) {
+    public Chunk(int initX, int initY, int initZ) {
         
         try {
             texture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("res/terrain.png"));
@@ -76,10 +77,10 @@ public class Chunk {
         VBOVertexHandle = glGenBuffers();
         VBOTextureHandle = glGenBuffers();
         
-        StartX = startX;
-        StartY = startY;
-        StartZ = startZ;
-        rebuildMesh(startX, startY, startZ); 
+        startX = initX;
+        startY = initY;
+        startZ = initZ;
+        rebuildMesh(); 
     }
     
     // method: render
@@ -100,13 +101,13 @@ public class Chunk {
     
     // method: rebuildMesh
     // purpose: this method updates the block buffers and facilitates noise generation
-    public void rebuildMesh(float startX, float startY, float startZ) {
+    public void rebuildMesh() {
         
-        //START OF NOISE GENERATION
-        SimplexNoise noise = new SimplexNoise(3, 1, seed);
+        seed = generateSeed();
+        noise = new SimplexNoise(512, 0.15, seed);
         
         VBOColorHandle = glGenBuffers();
-        VBOVertexHandle = glGenBuffers();
+        VBOVertexHandle = glGenBuffers(); 
         VBOTextureHandle = glGenBuffers();
         
         FloatBuffer VertexPositionData = BufferUtils.createFloatBuffer(
@@ -118,7 +119,11 @@ public class Chunk {
         
         for(float x = 0; x < CHUNK_SIZE; x += 1) {
             for (float z = 0; z < CHUNK_SIZE; z += 1) {
-                for(float y = 0; y < CHUNK_SIZE; y++) {
+                
+                double height = (startY + (100 * noise.getNoise((int) x + startX, startY, (int) z + startZ)) * CUBE_LENGTH);
+                
+                for(float y = 0; y < Math.max(1, Math.min(Math.abs(height) + 10, CHUNK_SIZE)); y++) {
+                    
                     VertexPositionData.put(createCube(
                         (float) (startX + x * CUBE_LENGTH),
                         (float) (y * CUBE_LENGTH + (int) (CHUNK_SIZE * .8)),
@@ -465,6 +470,6 @@ public class Chunk {
     private int generateSeed() {
         
         Random rand = new Random();
-        return ((int) System.currentTimeMillis()) + (rand.nextInt(999999 - 1) + 1);
+        return rand.nextInt(100);
     }
 }
