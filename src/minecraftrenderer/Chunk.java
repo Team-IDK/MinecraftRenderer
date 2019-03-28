@@ -104,7 +104,7 @@ public class Chunk {
     public void rebuildMesh() {
         
         seed = generateSeed();
-        noise = new SimplexNoise(8000, 0.535, seed);
+        noise = new SimplexNoise(CHUNK_SIZE*50, 0.535, seed);//Was 8000
         
         VBOColorHandle = glGenBuffers();
         VBOVertexHandle = glGenBuffers(); 
