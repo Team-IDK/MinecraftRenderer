@@ -122,7 +122,7 @@ public class Chunk {
                 
                 double height = (startY + (100 * noise.getNoise((int) x + startX, startY, (int) z + startZ)) * CUBE_LENGTH);
                 
-                for(float y = 0; y < Math.max(1, Math.min(Math.abs(height) + 10, CHUNK_SIZE)); y++) {
+                for(float y = 0; y < Math.max(1, Math.min(Math.abs(height) + 50, CHUNK_SIZE)); y++) {
                     
                     VertexPositionData.put(createCube(
                         (float) (startX + x * CUBE_LENGTH),

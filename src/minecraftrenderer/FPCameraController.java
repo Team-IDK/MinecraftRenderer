@@ -172,7 +172,7 @@ public class FPCameraController {
         
         Mouse.setGrabbed(true);
         
-        camera = new FPCameraController(-100, -200, -100);
+        camera = new FPCameraController(-100, -250, -100);
         chunk = new Chunk(0, 0, 0);
         
         float lastTime;
