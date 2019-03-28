@@ -470,6 +470,6 @@ public class Chunk {
     private int generateSeed() {
         
         Random rand = new Random();
-        return rand.nextInt(100);
+        return (int) System.currentTimeMillis() + rand.nextInt(10000);
     }
 }
