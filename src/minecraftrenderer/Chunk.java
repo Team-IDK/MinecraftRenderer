@@ -4,7 +4,7 @@
 * class: CS 4450 - Computer Graphics
 *
 * assignment: final program
-* date last modified: 4/15/2019
+* date last modified: 4/16/2019
 *
 * purpose: Data structure to bundle up a number of blocks together
 * and then only make a single call to the renderer for each chunk.
@@ -255,251 +255,252 @@ public class Chunk {
     public static float[] createTexCube(float x, float y, Block block) {
         
         float offset = (1024f/16) / 1024f;
+        float clip = 0.0075f;
         
         switch(block.getID()) {
-            
+
             // Grass
             case 0:
                 return new float[] {
                     // BOTTOM QUAD(DOWN=+Y)
-                    x + offset*3, y + offset*10,
-                    x + offset*2, y + offset*10,
-                    x + offset*2, y + offset*9,
-                    x + offset*3, y + offset*9,
+                    x + offset*3 - clip, y + offset*10 - clip,
+                    x + offset*2 + clip, y + offset*10 - clip,
+                    x + offset*2 + clip, y + offset*9 + clip,
+                    x + offset*3 - clip, y + offset*9 + clip,
                     // TOP!
-                    x + offset*3, y + offset*1,
-                    x + offset*2, y + offset*1,
-                    x + offset*2, y + offset*0,
-                    x + offset*3, y + offset*0,
+                    x + offset*3 - clip, y + offset*1 - clip,
+                    x + offset*2 + clip, y + offset*1 - clip,
+                    x + offset*2 + clip, y + offset*0 + clip,
+                    x + offset*3 - clip, y + offset*0 + clip,
                     // FRONT QUAD
-                    x + offset*3, y + offset*0,
-                    x + offset*4, y + offset*0,
-                    x + offset*4, y + offset*1,
-                    x + offset*3, y + offset*1,
+                    x + offset*3 + clip, y + offset*0 + clip,
+                    x + offset*4 - clip, y + offset*0 + clip,
+                    x + offset*4 - clip, y + offset*1 - clip,
+                    x + offset*3 + clip, y + offset*1 - clip,
                     // BACK QUAD
-                    x + offset*4, y + offset*1,
-                    x + offset*3, y + offset*1,
-                    x + offset*3, y + offset*0,
-                    x + offset*4, y + offset*0,
+                    x + offset*4 - clip, y + offset*1 - clip,
+                    x + offset*3 + clip, y + offset*1 - clip,
+                    x + offset*3 + clip, y + offset*0 + clip,
+                    x + offset*4 - clip, y + offset*0 + clip,
                     // LEFT QUAD
-                    x + offset*3, y + offset*0,
-                    x + offset*4, y + offset*0,
-                    x + offset*4, y + offset*1,
-                    x + offset*3, y + offset*1,
+                    x + offset*3 + clip, y + offset*0 + clip,
+                    x + offset*4 - clip, y + offset*0 + clip,
+                    x + offset*4 - clip, y + offset*1 - clip,
+                    x + offset*3 + clip, y + offset*1 - clip,
                     // RIGHT QUAD
-                    x + offset*3, y + offset*0,
-                    x + offset*4, y + offset*0,
-                    x + offset*4, y + offset*1,
-                    x + offset*3, y + offset*1
+                    x + offset*3 + clip, y + offset*0 + clip,
+                    x + offset*4 - clip, y + offset*0 + clip,
+                    x + offset*4 - clip, y + offset*1 - clip,
+                    x + offset*3 + clip, y + offset*1 - clip
                 };
             
             // Sand
             case 1:
                 return new float[] {
                     // BOTTOM QUAD (DOWN=+Y)
-                    x + offset*3, y + offset*2,
-                    x + offset*2, y + offset*2,
-                    x + offset*2, y + offset*1,
-                    x + offset*3, y + offset*1,
+                    x + offset*3 - clip, y + offset*2 - clip,
+                    x + offset*2 + clip, y + offset*2 - clip,
+                    x + offset*2 + clip, y + offset*1 + clip,
+                    x + offset*3 - clip, y + offset*1 + clip,
                     // TOP
-                    x + offset*3, y + offset*2,
-                    x + offset*2, y + offset*2,
-                    x + offset*2, y + offset*1,
-                    x + offset*3, y + offset*1,
+                    x + offset*3 - clip, y + offset*2 - clip,
+                    x + offset*2 + clip, y + offset*2 - clip,
+                    x + offset*2 + clip, y + offset*1 + clip,
+                    x + offset*3 - clip, y + offset*1 + clip,
                     // FRONT QUAD
-                    x + offset*2, y + offset*1,
-                    x + offset*3, y + offset*1,
-                    x + offset*3, y + offset*2,
-                    x + offset*2, y + offset*2,
+                    x + offset*2 + clip, y + offset*1 + clip,
+                    x + offset*3 - clip, y + offset*1 + clip,
+                    x + offset*3 - clip, y + offset*2 - clip,
+                    x + offset*2 + clip, y + offset*2 - clip,
                     // BACK QUAD
-                    x + offset*3, y + offset*2,
-                    x + offset*2, y + offset*2,
-                    x + offset*2, y + offset*1,
-                    x + offset*3, y + offset*1,
+                    x + offset*3 - clip, y + offset*2 - clip,
+                    x + offset*2 + clip, y + offset*2 - clip,
+                    x + offset*2 + clip, y + offset*1 + clip,
+                    x + offset*3 - clip, y + offset*1 + clip,
                     // LEFT QUAD
-                    x + offset*2, y + offset*1,
-                    x + offset*3, y + offset*1,
-                    x + offset*3, y + offset*2,
-                    x + offset*2, y + offset*2,
+                    x + offset*2 + clip, y + offset*1 + clip,
+                    x + offset*3 - clip, y + offset*1 + clip,
+                    x + offset*3 - clip, y + offset*2 - clip,
+                    x + offset*2 + clip, y + offset*2 - clip,
                     // RIGHT QUAD
-                    x + offset*2, y + offset*1,
-                    x + offset*3, y + offset*1,
-                    x + offset*3, y + offset*2,
-                    x + offset*2, y + offset*2
+                    x + offset*2 + clip, y + offset*1 + clip,
+                    x + offset*3 - clip, y + offset*1 + clip,
+                    x + offset*3 - clip, y + offset*2 - clip,
+                    x + offset*2 + clip, y + offset*2 - clip
                 };
             
             // Water
             case 2:
                 return new float[] {
                     // BOTTOM QUAD (DOWN=+Y)
-                    x + offset*14, y + offset*13,
-                    x + offset*13, y + offset*13,
-                    x + offset*13, y + offset*12,
-                    x + offset*14, y + offset*12,
+                    x + offset*14 - clip, y + offset*13 - clip,
+                    x + offset*13 + clip, y + offset*13 - clip,
+                    x + offset*13 + clip, y + offset*12 + clip,
+                    x + offset*14 - clip, y + offset*12 + clip,
                     // TOP
-                    x + offset*14, y + offset*13,
-                    x + offset*13, y + offset*13,
-                    x + offset*13, y + offset*12,
-                    x + offset*14, y + offset*12,
+                    x + offset*14 - clip, y + offset*13 - clip,
+                    x + offset*13 + clip, y + offset*13 - clip,
+                    x + offset*13 + clip, y + offset*12 + clip,
+                    x + offset*14 - clip, y + offset*12 + clip,
                     // FRONT QUAD
-                    x + offset*13, y + offset*12,
-                    x + offset*14, y + offset*12,
-                    x + offset*14, y + offset*13,
-                    x + offset*13, y + offset*13,
+                    x + offset*13 + clip, y + offset*12 + clip,
+                    x + offset*14 - clip, y + offset*12 + clip,
+                    x + offset*14 - clip, y + offset*13 - clip,
+                    x + offset*13 + clip, y + offset*13 - clip,
                     // BACK QUAD
-                    x + offset*14, y + offset*13,
-                    x + offset*13, y + offset*13,
-                    x + offset*13, y + offset*12,
-                    x + offset*14, y + offset*12,
+                    x + offset*14 - clip, y + offset*13 - clip,
+                    x + offset*13 + clip, y + offset*13 - clip,
+                    x + offset*13 + clip, y + offset*12 + clip,
+                    x + offset*14 - clip, y + offset*12 + clip,
                     // LEFT QUAD
-                    x + offset*13, y + offset*12,
-                    x + offset*14, y + offset*12,
-                    x + offset*14, y + offset*13,
-                    x + offset*13, y + offset*13,
+                    x + offset*13 + clip, y + offset*12 + clip,
+                    x + offset*14 - clip, y + offset*12 + clip,
+                    x + offset*14 - clip, y + offset*13 - clip,
+                    x + offset*13 + clip, y + offset*13 - clip,
                     // RIGHT QUAD
-                    x + offset*13, y + offset*12,
-                    x + offset*14, y + offset*12,
-                    x + offset*14, y + offset*13,
-                    x + offset*13, y + offset*13
+                    x + offset*13 + clip, y + offset*12 + clip,
+                    x + offset*14 - clip, y + offset*12 + clip,
+                    x + offset*14 - clip, y + offset*13 - clip,
+                    x + offset*13 + clip, y + offset*13 - clip
                 };
             
             // Dirt
             case 3:
                 return new float[] {
                     // BOTTOM QUAD (DOWN=+Y)
-                    x + offset*3, y + offset*1,
-                    x + offset*2, y + offset*1,
-                    x + offset*2, y + offset*0,
-                    x + offset*3, y + offset*0,
+                    x + offset*3 - clip, y + offset*1 - clip,
+                    x + offset*2 + clip, y + offset*1 - clip,
+                    x + offset*2 + clip, y + offset*0 + clip,
+                    x + offset*3 - clip, y + offset*0 + clip,
                     // TOP
-                    x + offset*3, y + offset*1,
-                    x + offset*2, y + offset*1,
-                    x + offset*2, y + offset*0,
-                    x + offset*3, y + offset*0,
+                    x + offset*3 - clip, y + offset*1 - clip,
+                    x + offset*2 + clip, y + offset*1 - clip,
+                    x + offset*2 + clip, y + offset*0 + clip,
+                    x + offset*3 - clip, y + offset*0 + clip,
                     // FRONT QUAD
-                    x + offset*2, y + offset*0,
-                    x + offset*3, y + offset*0,
-                    x + offset*3, y + offset*1,
-                    x + offset*2, y + offset*1,
+                    x + offset*2 + clip, y + offset*0 + clip,
+                    x + offset*3 - clip, y + offset*0 + clip,
+                    x + offset*3 - clip, y + offset*1 - clip,
+                    x + offset*2 + clip, y + offset*1 - clip,
                     // BACK QUAD
-                    x + offset*3, y + offset*1,
-                    x + offset*2, y + offset*1,
-                    x + offset*2, y + offset*0,
-                    x + offset*3, y + offset*0,
+                    x + offset*3 - clip, y + offset*1 - clip,
+                    x + offset*2 + clip, y + offset*1 - clip,
+                    x + offset*2 + clip, y + offset*0 + clip,
+                    x + offset*3 - clip, y + offset*0 + clip,
                     // LEFT QUAD
-                    x + offset*2, y + offset*0,
-                    x + offset*3, y + offset*0,
-                    x + offset*3, y + offset*1,
-                    x + offset*2, y + offset*1,
+                    x + offset*2 + clip, y + offset*0 + clip,
+                    x + offset*3 - clip, y + offset*0 + clip,
+                    x + offset*3 - clip, y + offset*1 - clip,
+                    x + offset*2 + clip, y + offset*1 - clip,
                     // RIGHT QUAD
-                    x + offset*2, y + offset*0,
-                    x + offset*3, y + offset*0,
-                    x + offset*3, y + offset*1,
-                    x + offset*2, y + offset*1
+                    x + offset*2 + clip, y + offset*0 + clip,
+                    x + offset*3 - clip, y + offset*0 + clip,
+                    x + offset*3 - clip, y + offset*1 - clip,
+                    x + offset*2 + clip, y + offset*1 - clip
                 };
                 
             // Stone    
             case 4:
                 return new float[] {
                     // BOTTOM QUAD (DOWN=+Y)
-                    x + offset*2, y + offset*1,
-                    x + offset*1, y + offset*1,
-                    x + offset*1, y + offset*0,
-                    x + offset*2, y + offset*0,
+                    x + offset*2 - clip, y + offset*1 - clip,
+                    x + offset*1 + clip, y + offset*1 - clip,
+                    x + offset*1 + clip, y + offset*0 + clip,
+                    x + offset*2 - clip, y + offset*0 + clip,
                     // TOP
-                    x + offset*2, y + offset*1,
-                    x + offset*1, y + offset*1,
-                    x + offset*1, y + offset*0,
-                    x + offset*2, y + offset*0,
+                    x + offset*2 - clip, y + offset*1 - clip,
+                    x + offset*1 + clip, y + offset*1 - clip,
+                    x + offset*1 + clip, y + offset*0 + clip,
+                    x + offset*2 - clip, y + offset*0 + clip,
                     // FRONT QUAD
-                    x + offset*1, y + offset*0,
-                    x + offset*2, y + offset*0,
-                    x + offset*2, y + offset*1,
-                    x + offset*1, y + offset*1,
+                    x + offset*1 + clip, y + offset*0 + clip,
+                    x + offset*2 - clip, y + offset*0 + clip,
+                    x + offset*2 - clip, y + offset*1 - clip,
+                    x + offset*1 + clip, y + offset*1 - clip,
                     // BACK QUAD
-                    x + offset*2, y + offset*1,
-                    x + offset*1, y + offset*1,
-                    x + offset*1, y + offset*0,
-                    x + offset*2, y + offset*0,
+                    x + offset*2 - clip, y + offset*1 - clip,
+                    x + offset*1 + clip, y + offset*1 - clip,
+                    x + offset*1 + clip, y + offset*0 + clip,
+                    x + offset*2 - clip, y + offset*0 + clip,
                     // LEFT QUAD
-                    x + offset*1, y + offset*0,
-                    x + offset*2, y + offset*0,
-                    x + offset*2, y + offset*1,
-                    x + offset*1, y + offset*1,
+                    x + offset*1 + clip, y + offset*0 + clip,
+                    x + offset*2 - clip, y + offset*0 + clip,
+                    x + offset*2 - clip, y + offset*1 - clip,
+                    x + offset*1 + clip, y + offset*1 - clip,
                     // RIGHT QUAD
-                    x + offset*1, y + offset*0,
-                    x + offset*2, y + offset*0,
-                    x + offset*2, y + offset*1,
-                    x + offset*1, y + offset*1
+                    x + offset*1 + clip, y + offset*0 + clip,
+                    x + offset*2 - clip, y + offset*0 + clip,
+                    x + offset*2 - clip, y + offset*1 - clip,
+                    x + offset*1 + clip, y + offset*1 - clip
                 };
             
             // Bedrock
             case 5:
                 return new float[] {
                     // BOTTOM QUAD (DOWN=+Y)
-                    x + offset*2, y + offset*2,
-                    x + offset*1, y + offset*2,
-                    x + offset*1, y + offset*1,
-                    x + offset*2, y + offset*1,
+                    x + offset*2 - clip, y + offset*2 - clip,
+                    x + offset*1 + clip, y + offset*2 - clip,
+                    x + offset*1 + clip, y + offset*1 + clip,
+                    x + offset*2 - clip, y + offset*1 + clip,
                     // TOP
-                    x + offset*2, y + offset*2,
-                    x + offset*1, y + offset*2,
-                    x + offset*1, y + offset*1,
-                    x + offset*2, y + offset*1,
+                    x + offset*2 - clip, y + offset*2 - clip,
+                    x + offset*1 + clip, y + offset*2 - clip,
+                    x + offset*1 + clip, y + offset*1 + clip,
+                    x + offset*2 - clip, y + offset*1 + clip,
                     // FRONT QUAD
-                    x + offset*1, y + offset*1,
-                    x + offset*2, y + offset*1,
-                    x + offset*2, y + offset*2,
-                    x + offset*1, y + offset*2,
+                    x + offset*1 + clip, y + offset*1 + clip,
+                    x + offset*2 - clip, y + offset*1 + clip,
+                    x + offset*2 - clip, y + offset*2 - clip,
+                    x + offset*1 + clip, y + offset*2 - clip,
                     // BACK QUAD
-                    x + offset*2, y + offset*2,
-                    x + offset*1, y + offset*2,
-                    x + offset*1, y + offset*1,
-                    x + offset*2, y + offset*1,
+                    x + offset*2 - clip, y + offset*2 - clip,
+                    x + offset*1 + clip, y + offset*2 - clip,
+                    x + offset*1 + clip, y + offset*1 + clip,
+                    x + offset*2 - clip, y + offset*1 + clip,
                     // LEFT QUAD
-                    x + offset*1, y + offset*1,
-                    x + offset*2, y + offset*1,
-                    x + offset*2, y + offset*2,
-                    x + offset*1, y + offset*2,
+                    x + offset*1 + clip, y + offset*1 + clip,
+                    x + offset*2 - clip, y + offset*1 + clip,
+                    x + offset*2 - clip, y + offset*2 - clip,
+                    x + offset*1 + clip, y + offset*2 - clip,
                     // RIGHT QUAD
-                    x + offset*1, y + offset*1,
-                    x + offset*2, y + offset*1,
-                    x + offset*2, y + offset*2,
-                    x + offset*1, y + offset*2
+                    x + offset*1 + clip, y + offset*1 + clip,
+                    x + offset*2 - clip, y + offset*1 + clip,
+                    x + offset*2 - clip, y + offset*2 - clip,
+                    x + offset*1 + clip, y + offset*2 - clip
                 };
                     
             default:
                 return new float[] {
                     // BOTTOM QUAD (DOWN=+Y)
-                    x + offset*1, y + offset*1,
-                    x + offset*0, y + offset*1,
-                    x + offset*0, y + offset*0,
-                    x + offset*1, y + offset*0,
+                    x + offset*1 - clip, y + offset*1 - clip,
+                    x + offset*0 + clip, y + offset*1 - clip,
+                    x + offset*0 + clip, y + offset*0 + clip,
+                    x + offset*1 - clip, y + offset*0 + clip,
                     // TOP
-                    x + offset*1, y + offset*1,
-                    x + offset*0, y + offset*1,
-                    x + offset*0, y + offset*0,
-                    x + offset*1, y + offset*0,
+                    x + offset*1 - clip, y + offset*1 - clip,
+                    x + offset*0 + clip, y + offset*1 - clip,
+                    x + offset*0 + clip, y + offset*0 + clip,
+                    x + offset*1 - clip, y + offset*0 + clip,
                     // FRONT QUAD
-                    x + offset*0, y + offset*0,
-                    x + offset*1, y + offset*0,
-                    x + offset*1, y + offset*1,
-                    x + offset*0, y + offset*1,
+                    x + offset*0 + clip, y + offset*0 + clip,
+                    x + offset*1 - clip, y + offset*0 + clip,
+                    x + offset*1 - clip, y + offset*1 - clip,
+                    x + offset*0 + clip, y + offset*1 - clip,
                     // BACK QUAD
-                    x + offset*1, y + offset*1,
-                    x + offset*0, y + offset*1,
-                    x + offset*0, y + offset*0,
-                    x + offset*1, y + offset*0,
+                    x + offset*1 - clip, y + offset*1 - clip,
+                    x + offset*0 + clip, y + offset*1 - clip,
+                    x + offset*0 + clip, y + offset*0 + clip,
+                    x + offset*1 - clip, y + offset*0 + clip,
                     // LEFT QUAD
-                    x + offset*0, y + offset*0,
-                    x + offset*1, y + offset*0,
-                    x + offset*1, y + offset*1,
-                    x + offset*0, y + offset*1,
+                    x + offset*0 + clip, y + offset*0 + clip,
+                    x + offset*1 - clip, y + offset*0 + clip,
+                    x + offset*1 - clip, y + offset*1 - clip,
+                    x + offset*0 + clip, y + offset*1 - clip,
                     // RIGHT QUAD
-                    x + offset*0, y + offset*0,
-                    x + offset*1, y + offset*0,
-                    x + offset*1, y + offset*1,
-                    x + offset*0, y + offset*1
+                    x + offset*0 + clip, y + offset*0 + clip,
+                    x + offset*1 - clip, y + offset*0 + clip,
+                    x + offset*1 - clip, y + offset*1 - clip,
+                    x + offset*0 + clip, y + offset*1 - clip
                 };
         }
     }
