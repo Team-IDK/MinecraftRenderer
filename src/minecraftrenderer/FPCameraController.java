@@ -1,6 +1,6 @@
 /***************************************************************
 * file: FPCameraController.java
-* author: Team NULL - Kyle Hubbard
+* author: Team NULL
 * class: CS 4450 - Computer Graphics
 *
 * assignment: final program
@@ -40,7 +40,7 @@ public class FPCameraController {
     public FPCameraController(float x, float y, float z) {
         
         position = new Vector3f(x, y, z);
-        lookPosition = new Vector3f(0f, 15f, 0f);
+        lookPosition = new Vector3f(100f, 0f, 100f);
         
         movementSpeed = 0.5f;
         mouseSensitivity = 0.075f;
@@ -76,9 +76,9 @@ public class FPCameraController {
         position.x -= xOffset;
         position.z += zOffset;
         
-//        FloatBuffer lightPosition= BufferUtils.createFloatBuffer(4);
-//        lightPosition.put(lookPosition.x-=xOffset).put(lookPosition.y).put(lookPosition.z+=zOffset).put(1.0f).flip();
-//        glLight(GL_LIGHT0, GL_POSITION, lightPosition);
+        FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
+        lightPosition.put(lookPosition.x-=xOffset).put(lookPosition.y).put(lookPosition.z+=zOffset).put(1.0f).flip();
+        glLight(GL_LIGHT0, GL_POSITION, lightPosition);
     }
     
     // method: walkBackwards
@@ -90,9 +90,9 @@ public class FPCameraController {
         position.x += xOffset;
         position.z -= zOffset;
         
-//        FloatBuffer lightPosition= BufferUtils.createFloatBuffer(4);
-//        lightPosition.put(lookPosition.x+=xOffset).put(lookPosition.y).put(lookPosition.z-=zOffset).put(1.0f).flip();
-//        glLight(GL_LIGHT0, GL_POSITION, lightPosition);
+        FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
+        lightPosition.put(lookPosition.x+=xOffset).put(lookPosition.y).put(lookPosition.z-=zOffset).put(1.0f).flip();
+        glLight(GL_LIGHT0, GL_POSITION, lightPosition);
     }
     
     // method: strafeRight
@@ -104,9 +104,9 @@ public class FPCameraController {
         position.x -= xOffset;
         position.z += zOffset;
         
-//        FloatBuffer lightPosition= BufferUtils.createFloatBuffer(4);
-//        lightPosition.put(lookPosition.x-=xOffset).put(lookPosition.y).put(lookPosition.z+=zOffset).put(1.0f).flip();
-//        glLight(GL_LIGHT0, GL_POSITION, lightPosition);
+        FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
+        lightPosition.put(lookPosition.x-=xOffset).put(lookPosition.y).put(lookPosition.z+=zOffset).put(1.0f).flip();
+        glLight(GL_LIGHT0, GL_POSITION, lightPosition);
     }
     
     // method: strafeLeft
@@ -118,9 +118,9 @@ public class FPCameraController {
         position.x -= xOffset;
         position.z += zOffset;
         
-//        FloatBuffer lightPosition= BufferUtils.createFloatBuffer(4);
-//        lightPosition.put(lookPosition.x-=xOffset).put(lookPosition.y).put(lookPosition.z+=zOffset).put(1.0f).flip();
-//        glLight(GL_LIGHT0, GL_POSITION, lightPosition);
+        FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
+        lightPosition.put(lookPosition.x-=xOffset).put(lookPosition.y).put(lookPosition.z+=zOffset).put(1.0f).flip();
+        glLight(GL_LIGHT0, GL_POSITION, lightPosition);
     }
     
     // method: moveUp
@@ -138,13 +138,14 @@ public class FPCameraController {
     // method: lookThrough
     // purpose: this method transforms the identity matrix to look through the camera
     public void lookThrough() {
-//        FloatBuffer lightPosition= BufferUtils.createFloatBuffer(4);
-//        lightPosition.put(lookPosition.x).put(lookPosition.y).put(lookPosition.z).put(1.0f).flip();
-//        glLight(GL_LIGHT0, GL_POSITION, lightPosition);
         
         glRotatef(pitch, 1.0f, 0.0f, 0.0f);
         glRotatef(yaw, 0.0f, 1.0f, 0.0f);
         glTranslatef(position.x, position.y, position.z);
+        
+        FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
+        lightPosition.put(lookPosition.x).put(lookPosition.y).put(lookPosition.z).put(1.0f).flip();
+        glLight(GL_LIGHT0, GL_POSITION, lightPosition);
     }
     
     //method: processMouseInput

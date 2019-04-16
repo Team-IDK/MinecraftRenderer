@@ -1,6 +1,6 @@
 /***************************************************************
 * file: Block.java
-* author: Team NULL - Michael Wono
+* author: Team NULL
 * class: CS 4450 - Computer Graphics
 *
 * assignment: final program

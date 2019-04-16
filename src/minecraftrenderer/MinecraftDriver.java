@@ -1,6 +1,6 @@
 /***************************************************************
 * file: MinecraftDriver.java
-* author: Team NULL - Kyle Hubbard
+* author: Team NULL
 * class: CS 4450 - Computer Graphics
 *
 * assignment: final program
