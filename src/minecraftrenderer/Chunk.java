@@ -4,7 +4,7 @@
 * class: CS 4450 - Computer Graphics
 *
 * assignment: final program
-* date last modified: 3/27/2019
+* date last modified: 4/15/2019
 *
 * purpose: Data structure to bundle up a number of blocks together
 * and then only make a single call to the renderer for each chunk.
@@ -56,19 +56,29 @@ public class Chunk {
         for(int x = 0; x < CHUNK_SIZE; x++) {
             for(int y = 0; y < CHUNK_SIZE; y++) {
                 for(int z = 0; z < CHUNK_SIZE; z++) {
-                    if (r.nextFloat() > 0.6f) {
-                        Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Grass);
-                    } else if (r.nextFloat() > 0.5f) {
-                        Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Dirt);
-                    } else if (r.nextFloat() > 0.4f) {
-                        Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Sand);
-                    } else if (r.nextFloat() > 0.3f) {
-                        Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Water);
-                    } else if (r.nextFloat() > 0.2f) {
+                    if (y == 0) {
+                        Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Bedrock);
+                    } else if ((y < (CHUNK_SIZE / 4)) && (y >= 1)) {
                         Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Stone);
+                    }  else if ((y < CHUNK_SIZE)  && (y >= (CHUNK_SIZE / 4))) {
+                        Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Dirt);
                     } else {
                         Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Bedrock);
                     }
+                    
+//                    if (r.nextFloat() > 0.6f) {
+//                        Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Grass);
+//                    } else if (r.nextFloat() > 0.5f) {
+//                        Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Dirt);
+//                    } else if (r.nextFloat() > 0.4f) {
+//                        Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Sand);
+//                    } else if (r.nextFloat() > 0.3f) {
+//                        Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Water);
+//                    } else if (r.nextFloat() > 0.2f) {
+//                        Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Stone);
+//                    } else {
+//                        Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Bedrock);
+//                    }
                 }
             }
         }
@@ -121,9 +131,17 @@ public class Chunk {
             for (float z = 0; z < CHUNK_SIZE; z += 1) {
                 
                 double height = (startY + (100 * noise.getNoise((int) x + startX, startY, (int) z + startZ)) * CUBE_LENGTH);
-                
-                for(float y = 0; y < Math.max(1, Math.min(Math.abs(height) + 50, CHUNK_SIZE)); y++) {
-                    
+                double maxHeight = Math.max(1, Math.min(Math.abs(height) + 50, CHUNK_SIZE));
+                for(float y = 0; y < maxHeight; y++) {
+                    if (y <= maxHeight && y > maxHeight - 1) {
+                        if (r.nextFloat() > .7f) {
+                            Blocks[(int) x][(int) y][(int) z].setID(Block.BlockType.BlockType_Water);
+                        } else if (r.nextFloat() > .5f) {
+                            Blocks[(int) x][(int) y][(int) z].setID(Block.BlockType.BlockType_Sand);
+                        } else {
+                            Blocks[(int) x][(int) y][(int) z].setID(Block.BlockType.BlockType_Grass);
+                        }
+                    }
                     VertexPositionData.put(createCube(
                         (float) (startX + x * CUBE_LENGTH),
                         (float) (y * CUBE_LENGTH + (int) (CHUNK_SIZE * .8)),
