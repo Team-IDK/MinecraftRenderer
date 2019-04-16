@@ -4,7 +4,7 @@
 * class: CS 4450 - Computer Graphics
 *
 * assignment: final program
-* date last modified: 3/27/2019
+* date last modified: 4/15/2019
 *
 * purpose: Data structure to store basic information for each block,
 * specifically the block's Type, active state, and coordinates.
@@ -81,5 +81,11 @@ public class Block {
     // purpose: this method returns the block's Type ID
     public int getID() {
         return Type.getID();
+    }
+    
+    // method: setID
+    // purpose: this method sets the block ID
+    public void setID(BlockType t) {
+        Type = t;
     }
 }

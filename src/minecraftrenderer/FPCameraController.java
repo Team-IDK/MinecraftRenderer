@@ -4,7 +4,7 @@
 * class: CS 4450 - Computer Graphics
 *
 * assignment: final program
-* date last modified: 3/27/2019
+* date last modified: 4/15/2019
 *
 * purpose: This program is the main class for the FPCameraController and it
 * controls all of the first person viewing functionality such as the camera,
@@ -14,6 +14,8 @@
 
 package minecraftrenderer;
 
+import java.nio.FloatBuffer;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -40,7 +42,7 @@ public class FPCameraController {
         position = new Vector3f(x, y, z);
         lookPosition = new Vector3f(0f, 15f, 0f);
         
-        movementSpeed = 0.1f;
+        movementSpeed = 0.5f;
         mouseSensitivity = 0.075f;
     }
     
@@ -73,6 +75,10 @@ public class FPCameraController {
         float zOffset = distance * (float)Math.cos(Math.toRadians(yaw));
         position.x -= xOffset;
         position.z += zOffset;
+        
+//        FloatBuffer lightPosition= BufferUtils.createFloatBuffer(4);
+//        lightPosition.put(lookPosition.x-=xOffset).put(lookPosition.y).put(lookPosition.z+=zOffset).put(1.0f).flip();
+//        glLight(GL_LIGHT0, GL_POSITION, lightPosition);
     }
     
     // method: walkBackwards
@@ -83,6 +89,10 @@ public class FPCameraController {
         float zOffset = distance * (float)Math.cos(Math.toRadians(yaw));
         position.x += xOffset;
         position.z -= zOffset;
+        
+//        FloatBuffer lightPosition= BufferUtils.createFloatBuffer(4);
+//        lightPosition.put(lookPosition.x+=xOffset).put(lookPosition.y).put(lookPosition.z-=zOffset).put(1.0f).flip();
+//        glLight(GL_LIGHT0, GL_POSITION, lightPosition);
     }
     
     // method: strafeRight
@@ -93,6 +103,10 @@ public class FPCameraController {
         float zOffset = distance * (float)Math.cos(Math.toRadians(yaw + 90));
         position.x -= xOffset;
         position.z += zOffset;
+        
+//        FloatBuffer lightPosition= BufferUtils.createFloatBuffer(4);
+//        lightPosition.put(lookPosition.x-=xOffset).put(lookPosition.y).put(lookPosition.z+=zOffset).put(1.0f).flip();
+//        glLight(GL_LIGHT0, GL_POSITION, lightPosition);
     }
     
     // method: strafeLeft
@@ -103,6 +117,10 @@ public class FPCameraController {
         float zOffset = distance * (float)Math.cos(Math.toRadians(yaw - 90));
         position.x -= xOffset;
         position.z += zOffset;
+        
+//        FloatBuffer lightPosition= BufferUtils.createFloatBuffer(4);
+//        lightPosition.put(lookPosition.x-=xOffset).put(lookPosition.y).put(lookPosition.z+=zOffset).put(1.0f).flip();
+//        glLight(GL_LIGHT0, GL_POSITION, lightPosition);
     }
     
     // method: moveUp
@@ -120,6 +138,9 @@ public class FPCameraController {
     // method: lookThrough
     // purpose: this method transforms the identity matrix to look through the camera
     public void lookThrough() {
+//        FloatBuffer lightPosition= BufferUtils.createFloatBuffer(4);
+//        lightPosition.put(lookPosition.x).put(lookPosition.y).put(lookPosition.z).put(1.0f).flip();
+//        glLight(GL_LIGHT0, GL_POSITION, lightPosition);
         
         glRotatef(pitch, 1.0f, 0.0f, 0.0f);
         glRotatef(yaw, 0.0f, 1.0f, 0.0f);
@@ -160,9 +181,9 @@ public class FPCameraController {
         
         //Sprint Key on Left Mouse Click
         if(Mouse.isButtonDown(0)) {
-            movementSpeed = 0.4f;
+            movementSpeed = 1.0f;
         } else if(!Mouse.isButtonDown(0)) {
-            movementSpeed = 0.2f;
+            movementSpeed = 0.5f;
         }
     }
     
