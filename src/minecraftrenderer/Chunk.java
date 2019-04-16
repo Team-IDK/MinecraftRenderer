@@ -25,7 +25,7 @@ import org.newdawn.slick.util.ResourceLoader;
 
 public class Chunk {
     
-    static final int CHUNK_SIZE = 30;
+    static final int CHUNK_SIZE = 100;
     static final int CUBE_LENGTH = 2;
     private int startX, startY, startZ;
     
@@ -56,13 +56,13 @@ public class Chunk {
         for(int x = 0; x < CHUNK_SIZE; x++) {
             for(int y = 0; y < CHUNK_SIZE; y++) {
                 for(int z = 0; z < CHUNK_SIZE; z++) {
-                    if (r.nextFloat() > 0.7f) {
+                    if (r.nextFloat() > 0.6f) {
                         Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Grass);
-                    } else if (r.nextFloat() > 0.6f) {
+                    } else if (r.nextFloat() > 0.5f) {
                         Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Dirt);
-                    } else if (r.nextFloat() > 0.45f) {
+                    } else if (r.nextFloat() > 0.4f) {
                         Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Sand);
-                    } else if (r.nextFloat() > 0.35f) {
+                    } else if (r.nextFloat() > 0.3f) {
                         Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Water);
                     } else if (r.nextFloat() > 0.2f) {
                         Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Stone);
@@ -104,7 +104,7 @@ public class Chunk {
     public void rebuildMesh() {
         
         seed = generateSeed();
-        noise = new SimplexNoise(CHUNK_SIZE*50, 0.535, seed);//Was 8000
+        noise = new SimplexNoise(8000, 0.5, seed);
         
         VBOColorHandle = glGenBuffers();
         VBOVertexHandle = glGenBuffers(); 
@@ -121,9 +121,8 @@ public class Chunk {
             for (float z = 0; z < CHUNK_SIZE; z += 1) {
                 
                 double height = (startY + (100 * noise.getNoise((int) x + startX, startY, (int) z + startZ)) * CUBE_LENGTH);
-                System.out.println("Height: " + height);
                 
-                for(float y = 0; y < Math.max(1, Math.min(Math.abs(height) + 10, CHUNK_SIZE)); y++) {
+                for(float y = 0; y < Math.max(1, Math.min(Math.abs(height) + 50, CHUNK_SIZE)); y++) {
                     
                     VertexPositionData.put(createCube(
                         (float) (startX + x * CUBE_LENGTH),

@@ -160,9 +160,9 @@ public class FPCameraController {
         
         //Sprint Key on Left Mouse Click
         if(Mouse.isButtonDown(0)) {
-            movementSpeed = 0.3f;
+            movementSpeed = 0.4f;
         } else if(!Mouse.isButtonDown(0)) {
-            movementSpeed = 0.1f;
+            movementSpeed = 0.2f;
         }
     }
     
@@ -172,7 +172,7 @@ public class FPCameraController {
         
         Mouse.setGrabbed(true);
         
-        camera = new FPCameraController(-30, -100, -30);
+        camera = new FPCameraController(-100, -250, -100);
         chunk = new Chunk(0, 0, 0);
         
         float lastTime;
