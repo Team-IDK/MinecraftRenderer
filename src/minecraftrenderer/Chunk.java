@@ -65,20 +65,6 @@ public class Chunk {
                     } else {
                         Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Bedrock);
                     }
-                    
-//                    if (r.nextFloat() > 0.6f) {
-//                        Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Grass);
-//                    } else if (r.nextFloat() > 0.5f) {
-//                        Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Dirt);
-//                    } else if (r.nextFloat() > 0.4f) {
-//                        Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Sand);
-//                    } else if (r.nextFloat() > 0.3f) {
-//                        Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Water);
-//                    } else if (r.nextFloat() > 0.2f) {
-//                        Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Stone);
-//                    } else {
-//                        Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Bedrock);
-//                    }
                 }
             }
         }
@@ -127,21 +113,57 @@ public class Chunk {
         FloatBuffer VertexTextureData = BufferUtils.createFloatBuffer(
                 (CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE) * 6 * 12);
         
+        float seaLevel = 53f;
+        float sandLevel = 55f;
+        
         for(float x = 0; x < CHUNK_SIZE; x += 1) {
             for (float z = 0; z < CHUNK_SIZE; z += 1) {
-                
                 double height = (startY + (100 * noise.getNoise((int) x + startX, startY, (int) z + startZ)) * CUBE_LENGTH);
-                double maxHeight = Math.max(1, Math.min(Math.abs(height) + 50, CHUNK_SIZE));
-                for(float y = 0; y < maxHeight; y++) {
-                    if (y <= maxHeight && y > maxHeight - 1) {
-                        if (r.nextFloat() > .7f) {
-                            Blocks[(int) x][(int) y][(int) z].setID(Block.BlockType.BlockType_Water);
-                        } else if (r.nextFloat() > .5f) {
-                            Blocks[(int) x][(int) y][(int) z].setID(Block.BlockType.BlockType_Sand);
-                        } else {
-                            Blocks[(int) x][(int) y][(int) z].setID(Block.BlockType.BlockType_Grass);
+                float maxHeight = (float) Math.max(1, Math.min(Math.abs(height) + 47, CHUNK_SIZE));
+                for(float y = 0; y <= maxHeight; y++) {
+                    if (maxHeight < seaLevel && y > maxHeight - 5) {
+                        for (float i = y; i < seaLevel; i++) {
+                            Blocks[(int) x][(int) i][(int) z].setID(Block.BlockType.BlockType_Water);
+                            
+                            VertexPositionData.put(createCube(
+                                (float) (startX + x * CUBE_LENGTH),
+                                (float) (i * CUBE_LENGTH + (int) (CHUNK_SIZE * .8)),
+                                (float) (startZ + z * CUBE_LENGTH)));
+                            VertexColorData.put(createCubeVertexCol(getCubeColor(
+                                Blocks[(int) x][(int) i][(int) z])));
+                            VertexTextureData.put(createTexCube((float) 0, (float) 0,
+                                Blocks[(int) x][(int) i][(int) z]));
                         }
+                    } else if (maxHeight < seaLevel && y > maxHeight - 9) {
+                        for (float i = y; i <= maxHeight - 5; i++) {
+                            Blocks[(int) x][(int) i][(int) z].setID(Block.BlockType.BlockType_Sand);
+                            
+                            VertexPositionData.put(createCube(
+                                (float) (startX + x * CUBE_LENGTH),
+                                (float) (i * CUBE_LENGTH + (int) (CHUNK_SIZE * .8)),
+                                (float) (startZ + z * CUBE_LENGTH)));
+                            VertexColorData.put(createCubeVertexCol(getCubeColor(
+                                Blocks[(int) x][(int) i][(int) z])));
+                            VertexTextureData.put(createTexCube((float) 0, (float) 0,
+                                Blocks[(int) x][(int) i][(int) z]));
+                        }
+                    } else if (maxHeight < sandLevel && y > maxHeight - 8) {
+                        for (float i = y; i <= maxHeight; i++) {
+                            Blocks[(int) x][(int) i][(int) z].setID(Block.BlockType.BlockType_Sand);
+                            
+                            VertexPositionData.put(createCube(
+                                (float) (startX + x * CUBE_LENGTH),
+                                (float) (i * CUBE_LENGTH + (int) (CHUNK_SIZE * .8)),
+                                (float) (startZ + z * CUBE_LENGTH)));
+                            VertexColorData.put(createCubeVertexCol(getCubeColor(
+                                Blocks[(int) x][(int) i][(int) z])));
+                            VertexTextureData.put(createTexCube((float) 0, (float) 0,
+                                Blocks[(int) x][(int) i][(int) z]));
+                        }
+                    }else if (y > maxHeight-1) {
+                        Blocks[(int) x][(int) y][(int) z].setID(Block.BlockType.BlockType_Grass);
                     }
+                    
                     VertexPositionData.put(createCube(
                         (float) (startX + x * CUBE_LENGTH),
                         (float) (y * CUBE_LENGTH + (int) (CHUNK_SIZE * .8)),
@@ -153,7 +175,6 @@ public class Chunk {
                 }
             }
         }
-        
         // End of for loops
         VertexColorData.flip();
         VertexPositionData.flip();
