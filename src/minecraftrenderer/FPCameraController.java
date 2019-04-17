@@ -188,8 +188,9 @@ public class FPCameraController {
         }
         
         // Generate new chunk
-        if(Keyboard.isKeyDown(Keyboard.KEY_F1))
+        if(Keyboard.isKeyDown(Keyboard.KEY_F1)) {
             chunk = new Chunk(0, 0, 0);
+        }
     }
     
     // method: gameLoop

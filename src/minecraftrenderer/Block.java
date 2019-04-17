@@ -4,7 +4,7 @@
 * class: CS 4450 - Computer Graphics
 *
 * assignment: final program
-* date last modified: 4/15/2019
+* date last modified: 4/16/2019
 *
 * purpose: Data structure to store basic information for each block,
 * specifically the block's Type, active state, and coordinates.
@@ -28,7 +28,13 @@ public class Block {
         BlockType_Water(2),
         BlockType_Dirt(3),
         BlockType_Stone(4),
-        BlockType_Bedrock(5);
+        BlockType_Bedrock(5),
+        BlockType_Log(6),
+        BlockType_Leaf(7),
+        BlockType_Cactus(8),
+        BlockType_Poppy(9),
+        BlockType_Dandelion(10),
+        BlockType_SugarCane(11);
         
         private int BlockID;
         
