@@ -4,7 +4,7 @@
 * class: CS 4450 - Computer Graphics
 *
 * assignment: final program
-* date last modified: 4/15/2019
+* date last modified: 4/16/2019
 *
 * purpose: This program is the main class for the FPCameraController and it
 * controls all of the first person viewing functionality such as the camera,
@@ -180,12 +180,16 @@ public class FPCameraController {
         if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
             camera.moveDown(movementSpeed);
         
-        //Sprint Key on Left Mouse Click
+        // Sprint Key on Left Mouse Click
         if(Mouse.isButtonDown(0)) {
             movementSpeed = 1.0f;
         } else if(!Mouse.isButtonDown(0)) {
             movementSpeed = 0.5f;
         }
+        
+        // Generate new chunk
+        if(Keyboard.isKeyDown(Keyboard.KEY_F1))
+            chunk = new Chunk(0, 0, 0);
     }
     
     // method: gameLoop
