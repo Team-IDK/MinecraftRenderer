@@ -4,7 +4,7 @@
 * class: CS 4450 - Computer Graphics
 *
 * assignment: final program
-* date last modified: 4/16/2019
+* date last modified: 4/17/2019
 *
 * purpose: Data structure to bundle up a number of blocks together
 * and then only make a single call to the renderer for each chunk.
@@ -161,14 +161,14 @@ public class Chunk {
                             VertexTextureData.put(createTexCube((float) 0, (float) 0,
                                 Blocks[(int) x][(int) i][(int) z]));
                             
-                            if((i == sandLevel - 1 || i == sandLevel - 2) && (r.nextInt(750) + 1 == 1)) {
+                            if(y > maxHeight - 2 && (r.nextInt(400) + 1 == 1)) {
                                 buildCactus((int) x,(int) y + 1,(int) z, Blocks, VertexPositionData, VertexColorData, VertexTextureData); 
                             }
                         }
                     } else if (y > maxHeight-1) {
                         Blocks[(int) x][(int) y][(int) z].setID(Block.BlockType.BlockType_Grass);
                         
-                        if(r.nextInt(500) + 1 == 1) {
+                        if(r.nextInt(100) + 1 == 1) {
                             buildTree((int) x,(int) y + 1,(int) z, Blocks, VertexPositionData, VertexColorData, VertexTextureData);
                         }
                     }
@@ -207,7 +207,9 @@ public class Chunk {
         int xOffset = 0, zOffset = 0;
         Random r = new Random();
         
-        if(r.nextInt(100) >= 40) {
+        if(y > 94) {
+            //Don't spawn
+        } else if(r.nextInt(100) >= 40) {
             
             // Large Tree
             for(int i = y; i <= y + 6; i++) {
