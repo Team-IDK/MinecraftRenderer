@@ -4,7 +4,7 @@
 * class: CS 4450 - Computer Graphics
 *
 * assignment: final program
-* date last modified: 4/17/2019
+* date last modified: 4/22/2019
 *
 * purpose: Data structure to bundle up a number of blocks together
 * and then only make a single call to the renderer for each chunk.
@@ -25,11 +25,11 @@ import org.newdawn.slick.util.ResourceLoader;
 
 public class Chunk {
     
-    static final int CHUNK_SIZE = 100;
+    public static final int CHUNK_SIZE = 100;
     static final int CUBE_LENGTH = 2;
     private int startX, startY, startZ;
     
-    private Block[][][] Blocks;
+    public Block[][][] Blocks;
     private Texture texture;
     private int VBOVertexHandle;
     private int VBOColorHandle;
@@ -38,10 +38,14 @@ public class Chunk {
     private Random r;
     private int seed;
     private SimplexNoise noise;
+    boolean isNether, portalBuilt;
 
     // method: Chunk
     // purpose: this constructor generates the chunk data
-    public Chunk(int initX, int initY, int initZ) {
+    public Chunk(int initX, int initY, int initZ, boolean isNether) {
+        
+        this.isNether = isNether;
+        portalBuilt = false;
         
         try {
             texture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("res/terrain.png"));
@@ -58,12 +62,16 @@ public class Chunk {
                 for(int z = 0; z < CHUNK_SIZE; z++) {
                     if (y <= 2) {
                         Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Bedrock);
+                        Blocks[x][y][z].setCoords(x, y, z);
                     } else if ((y < (CHUNK_SIZE / 4)) && (y >= 3)) {
                         Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Stone);
+                        Blocks[x][y][z].setCoords(x, y, z);
                     } else if ((y < CHUNK_SIZE)  && (y >= (CHUNK_SIZE / 4))) {
                         Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Dirt);
+                        Blocks[x][y][z].setCoords(x, y, z);
                     } else {
                         Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Bedrock);
+                        Blocks[x][y][z].setCoords(x, y, z);
                     }
                 }
             }
@@ -100,7 +108,11 @@ public class Chunk {
     public void rebuildMesh() {
         
         seed = generateSeed();
-        noise = new SimplexNoise(8000, 0.5, seed);
+        
+        if(!isNether)
+            noise = new SimplexNoise(8000, 0.5, seed);
+        else
+            noise = new SimplexNoise(8000, 0.5, seed);
         
         VBOColorHandle = glGenBuffers();
         VBOVertexHandle = glGenBuffers(); 
@@ -115,6 +127,8 @@ public class Chunk {
         
         float seaLevel = 53f;
         float sandLevel = 55f;
+        if(isNether)
+            sandLevel++;
         
         for(float x = 0; x < CHUNK_SIZE; x += 1) {
             for (float z = 0; z < CHUNK_SIZE; z += 1) {
@@ -123,7 +137,11 @@ public class Chunk {
                 for(float y = 0; y <= maxHeight; y++) {
                     if (maxHeight < seaLevel && y > maxHeight - 5) {
                         for (float i = y; i < seaLevel; i++) {
-                            Blocks[(int) x][(int) i][(int) z].setID(Block.BlockType.BlockType_Water);
+                            
+                            if(!isNether)
+                                Blocks[(int) x][(int) i][(int) z].setID(Block.BlockType.BlockType_Water);
+                            else
+                                Blocks[(int) x][(int) i][(int) z].setID(Block.BlockType.BlockType_Lava);
                             
                             VertexPositionData.put(createCube(
                                 (float) (startX + x * CUBE_LENGTH),
@@ -136,7 +154,11 @@ public class Chunk {
                         }
                     } else if (maxHeight < seaLevel && y > maxHeight - 9) {
                         for (float i = y; i <= maxHeight - 5; i++) {
-                            Blocks[(int) x][(int) i][(int) z].setID(Block.BlockType.BlockType_Sand);
+                            
+                            if(!isNether)
+                                Blocks[(int) x][(int) i][(int) z].setID(Block.BlockType.BlockType_Sand);
+                            else
+                                Blocks[(int) x][(int) i][(int) z].setID(Block.BlockType.BlockType_SoulSand);
                             
                             VertexPositionData.put(createCube(
                                 (float) (startX + x * CUBE_LENGTH),
@@ -150,7 +172,10 @@ public class Chunk {
                     } else if (maxHeight < sandLevel && y > maxHeight - 8) {
                         for (float i = y; i <= maxHeight; i++) {
                             
-                            Blocks[(int) x][(int) i][(int) z].setID(Block.BlockType.BlockType_Sand);  
+                            if(!isNether)
+                                Blocks[(int) x][(int) i][(int) z].setID(Block.BlockType.BlockType_Sand);
+                            else
+                                Blocks[(int) x][(int) i][(int) z].setID(Block.BlockType.BlockType_SoulSand);
 
                             VertexPositionData.put(createCube(
                                 (float) (startX + x * CUBE_LENGTH),
@@ -162,14 +187,32 @@ public class Chunk {
                                 Blocks[(int) x][(int) i][(int) z]));
                             
                             if(y > maxHeight - 2 && (r.nextInt(400) + 1 == 1)) {
-                                buildCactus((int) x,(int) y + 1,(int) z, Blocks, VertexPositionData, VertexColorData, VertexTextureData); 
+                                
+                                if(!isNether)
+                                    buildCactus((int) x,(int) y + 1,(int) z, Blocks, VertexPositionData, VertexColorData, VertexTextureData);
+                                else if(isNether && r.nextInt(75) + 1 == 1) {
+                                    if(!portalBuilt && x > 10 && x < 90 && z > 10 && z < 90)
+                                    buildPortal((int) x,(int) y + 1,(int) z, Blocks, VertexPositionData, VertexColorData, VertexTextureData);
+                                }
                             }
                         }
                     } else if (y > maxHeight-1) {
-                        Blocks[(int) x][(int) y][(int) z].setID(Block.BlockType.BlockType_Grass);
                         
-                        if(r.nextInt(100) + 1 == 1) {
+                        if(!isNether)
+                            Blocks[(int) x][(int) y][(int) z].setID(Block.BlockType.BlockType_Grass);
+                        else
+                            Blocks[(int) x][(int) y][(int) z].setID(Block.BlockType.BlockType_Netherrack);
+                        
+                        if(!isNether && r.nextInt(100) + 1 == 1)
                             buildTree((int) x,(int) y + 1,(int) z, Blocks, VertexPositionData, VertexColorData, VertexTextureData);
+                        else if(isNether && r.nextInt(75) + 1 == 1) {
+                            if(r.nextInt(100) + 1 > 25)
+                                Blocks[(int) x][(int) y][(int) z].setID(Block.BlockType.BlockType_Glowstone);
+                            else
+                                Blocks[(int) x][(int) y][(int) z].setID(Block.BlockType.BlockType_NetherQuartz);
+                                             
+                            if(!portalBuilt && x > 10 && x < 90 && z > 10 && z < 90)
+                                buildPortal((int) x,(int) y + 1,(int) z, Blocks, VertexPositionData, VertexColorData, VertexTextureData);
                         }
                     }
                     
@@ -328,6 +371,8 @@ public class Chunk {
         }
     }
     
+    // method: buildCactus
+    // purpose: this method spawns a cactus at the given location
     private void buildCactus(int x, int y, int z, Block[][][] Blocks, FloatBuffer VertexPositionData, FloatBuffer VertexColorData, FloatBuffer VertexTextureData) {
         
         for(int i = y; i < y + 3; i++) {
@@ -343,6 +388,40 @@ public class Chunk {
             VertexTextureData.put(createTexCube((float) 0, (float) 0,
                 Blocks[(int) x][(int) i][(int) z]));      
         }              
+    }
+    
+    // method: buildTree
+    // purpose: this method spawns a nether portal at the given location
+    private void buildPortal(int x, int y, int z, Block[][][] Blocks, FloatBuffer VertexPositionData, FloatBuffer VertexColorData, FloatBuffer VertexTextureData) {
+
+        Random r = new Random();
+        
+        if(y > 90) {
+            //Don't spawn
+        } else {
+
+            for(int i = y; i <= y + 5; i++) {
+                
+                for(int j = x; j <= x + 3; j++) {
+                
+                    if(j > x && j < x + 3 && i > y && i < y + 5)
+                        Blocks[(int) j][(int) i][(int) z].setID(Block.BlockType.BlockType_Portal);
+                    else
+                        Blocks[(int) j][(int) i][(int) z].setID(Block.BlockType.BlockType_Obsidian);  
+
+                    VertexPositionData.put(createCube(
+                        (float) (startX + j * CUBE_LENGTH),
+                        (float) (i * CUBE_LENGTH + (int) (CHUNK_SIZE * .8)),
+                        (float) (startZ + z * CUBE_LENGTH)));
+                    VertexColorData.put(createCubeVertexCol(getCubeColor(
+                        Blocks[(int) j][(int) i][(int) z])));
+                    VertexTextureData.put(createTexCube((float) 0, (float) 0,
+                        Blocks[(int) j][(int) i][(int) z]));   
+                }
+            }  
+            
+            portalBuilt = true;
+        }
     }
     
     // method: createCubeVertexCol
@@ -726,6 +805,251 @@ public class Chunk {
                     x + offset*7 - clip, y + offset*4 + clip,
                     x + offset*7 - clip, y + offset*5 - clip,
                     x + offset*6 + clip, y + offset*5 - clip
+                };
+                
+            // Netherrack
+            case 9:
+                return new float[] {
+                    // BOTTOM QUAD (DOWN=+Y)
+                    x + offset*7 + clip, y + offset*6 + clip,
+                    x + offset*8 - clip, y + offset*6 + clip,
+                    x + offset*8 - clip, y + offset*7 - clip,
+                    x + offset*7 + clip, y + offset*7 - clip,
+                    // TOP
+                    x + offset*7 + clip, y + offset*6 + clip,
+                    x + offset*8 - clip, y + offset*6 + clip,
+                    x + offset*8 - clip, y + offset*7 - clip,
+                    x + offset*7 + clip, y + offset*7 - clip,
+                    // FRONT QUAD
+                    x + offset*7 + clip, y + offset*6 + clip,
+                    x + offset*8 - clip, y + offset*6 + clip,
+                    x + offset*8 - clip, y + offset*7 - clip,
+                    x + offset*7 + clip, y + offset*7 - clip,
+                    // BACK QUAD
+                    x + offset*8 - clip, y + offset*7 - clip,
+                    x + offset*7 + clip, y + offset*7 - clip,
+                    x + offset*7 + clip, y + offset*6 + clip,
+                    x + offset*8 - clip, y + offset*6 + clip,
+                    // LEFT QUAD
+                    x + offset*7 + clip, y + offset*6 + clip,
+                    x + offset*8 - clip, y + offset*6 + clip,
+                    x + offset*8 - clip, y + offset*7 - clip,
+                    x + offset*7 + clip, y + offset*7 - clip,
+                    // RIGHT QUAD
+                    x + offset*7 + clip, y + offset*6 + clip,
+                    x + offset*8 - clip, y + offset*6 + clip,
+                    x + offset*8 - clip, y + offset*7 - clip,
+                    x + offset*7 + clip, y + offset*7 - clip
+                };
+                
+            // SoulSand
+            case 10:
+                return new float[] {
+                    // BOTTOM QUAD (DOWN=+Y)
+                    x + offset*8 + clip, y + offset*6 + clip,
+                    x + offset*9 - clip, y + offset*6 + clip,
+                    x + offset*9 - clip, y + offset*7 - clip,
+                    x + offset*8 + clip, y + offset*7 - clip,
+                    // TOP
+                    x + offset*8 + clip, y + offset*6 + clip,
+                    x + offset*9 - clip, y + offset*6 + clip,
+                    x + offset*9 - clip, y + offset*7 - clip,
+                    x + offset*8 + clip, y + offset*7 - clip,
+                    // FRONT QUAD
+                    x + offset*8 + clip, y + offset*6 + clip,
+                    x + offset*9 - clip, y + offset*6 + clip,
+                    x + offset*9 - clip, y + offset*7 - clip,
+                    x + offset*8 + clip, y + offset*7 - clip,
+                    // BACK QUAD
+                    x + offset*9 - clip, y + offset*7 - clip,
+                    x + offset*8 + clip, y + offset*7 - clip,
+                    x + offset*8 + clip, y + offset*6 + clip,
+                    x + offset*9 - clip, y + offset*6 + clip,
+                    // LEFT QUAD
+                    x + offset*8 + clip, y + offset*6 + clip,
+                    x + offset*9 - clip, y + offset*6 + clip,
+                    x + offset*9 - clip, y + offset*7 - clip,
+                    x + offset*8 + clip, y + offset*7 - clip,
+                    // RIGHT QUAD
+                    x + offset*8 + clip, y + offset*6 + clip,
+                    x + offset*9 - clip, y + offset*6 + clip,
+                    x + offset*9 - clip, y + offset*7 - clip,
+                    x + offset*8 + clip, y + offset*7 - clip
+                };
+                
+            // Glowstone
+            case 11:
+                return new float[] {
+                    // BOTTOM QUAD (DOWN=+Y)
+                    x + offset*9 + clip, y + offset*6 + clip,
+                    x + offset*10 - clip, y + offset*6 + clip,
+                    x + offset*10 - clip, y + offset*7 - clip,
+                    x + offset*9 + clip, y + offset*7 - clip,
+                    // TOP
+                    x + offset*9 + clip, y + offset*6 + clip,
+                    x + offset*10 - clip, y + offset*6 + clip,
+                    x + offset*10 - clip, y + offset*7 - clip,
+                    x + offset*9 + clip, y + offset*7 - clip,
+                    // FRONT QUAD
+                    x + offset*9 + clip, y + offset*6 + clip,
+                    x + offset*10 - clip, y + offset*6 + clip,
+                    x + offset*10 - clip, y + offset*7 - clip,
+                    x + offset*9 + clip, y + offset*7 - clip,
+                    // BACK QUAD
+                    x + offset*10 - clip, y + offset*7 - clip,
+                    x + offset*9 + clip, y + offset*7 - clip,
+                    x + offset*9 + clip, y + offset*6 + clip,
+                    x + offset*10 - clip, y + offset*6 + clip,
+                    // LEFT QUAD
+                    x + offset*9 + clip, y + offset*6 + clip,
+                    x + offset*10 - clip, y + offset*6 + clip,
+                    x + offset*10 - clip, y + offset*7 - clip,
+                    x + offset*9 + clip, y + offset*7 - clip,
+                    // RIGHT QUAD
+                    x + offset*9 + clip, y + offset*6 + clip,
+                    x + offset*10 - clip, y + offset*6 + clip,
+                    x + offset*10 - clip, y + offset*7 - clip,
+                    x + offset*9 + clip, y + offset*7 - clip
+                };
+                
+            // Lava
+            case 12:
+                return new float[] {
+                    // BOTTOM QUAD (DOWN=+Y)
+                    x + offset*10 + clip, y + offset*10 + clip,
+                    x + offset*11 - clip, y + offset*10 + clip,
+                    x + offset*11 - clip, y + offset*11 - clip,
+                    x + offset*10 + clip, y + offset*11 - clip,
+                    // TOP
+                    x + offset*10 + clip, y + offset*10 + clip,
+                    x + offset*11 - clip, y + offset*10 + clip,
+                    x + offset*11 - clip, y + offset*11 - clip,
+                    x + offset*10 + clip, y + offset*11 - clip,
+                    // FRONT QUAD
+                    x + offset*10 + clip, y + offset*10 + clip,
+                    x + offset*11 - clip, y + offset*10 + clip,
+                    x + offset*11 - clip, y + offset*11 - clip,
+                    x + offset*10 + clip, y + offset*11 - clip,
+                    // BACK QUAD
+                    x + offset*11 - clip, y + offset*11 - clip,
+                    x + offset*10 + clip, y + offset*11 - clip,
+                    x + offset*10 + clip, y + offset*10 + clip,
+                    x + offset*11 - clip, y + offset*10 + clip,
+                    // LEFT QUAD
+                    x + offset*10 + clip, y + offset*10 + clip,
+                    x + offset*11 - clip, y + offset*10 + clip,
+                    x + offset*11 - clip, y + offset*11 - clip,
+                    x + offset*10 + clip, y + offset*11 - clip,
+                    // RIGHT QUAD
+                    x + offset*10 + clip, y + offset*10 + clip,
+                    x + offset*11 - clip, y + offset*10 + clip,
+                    x + offset*11 - clip, y + offset*11 - clip,
+                    x + offset*10 + clip, y + offset*11 - clip
+                };
+                
+            // NetherQuartz
+            case 13:
+                return new float[] {
+                    // BOTTOM QUAD (DOWN=+Y)
+                    x + offset*7 + clip, y + offset*5 + clip,
+                    x + offset*8 - clip, y + offset*5 + clip,
+                    x + offset*8 - clip, y + offset*6 - clip,
+                    x + offset*7 + clip, y + offset*6 - clip,
+                    // TOP
+                    x + offset*7 + clip, y + offset*5 + clip,
+                    x + offset*8 - clip, y + offset*5 + clip,
+                    x + offset*8 - clip, y + offset*6 - clip,
+                    x + offset*7 + clip, y + offset*6 - clip,
+                    // FRONT QUAD
+                    x + offset*7 + clip, y + offset*5 + clip,
+                    x + offset*8 - clip, y + offset*5 + clip,
+                    x + offset*8 - clip, y + offset*6 - clip,
+                    x + offset*7 + clip, y + offset*6 - clip,
+                    // BACK QUAD
+                    x + offset*8 - clip, y + offset*6 - clip,
+                    x + offset*7 + clip, y + offset*6 - clip,
+                    x + offset*7 + clip, y + offset*5 + clip,
+                    x + offset*8 - clip, y + offset*5 + clip,
+                    // LEFT QUAD
+                    x + offset*7 + clip, y + offset*5 + clip,
+                    x + offset*8 - clip, y + offset*5 + clip,
+                    x + offset*8 - clip, y + offset*6 - clip,
+                    x + offset*7 + clip, y + offset*6 - clip,
+                    // RIGHT QUAD
+                    x + offset*7 + clip, y + offset*5 + clip,
+                    x + offset*8 - clip, y + offset*5 + clip,
+                    x + offset*8 - clip, y + offset*6 - clip,
+                    x + offset*7 + clip, y + offset*6 - clip
+                };
+                
+            // Obsidian
+            case 14:
+                return new float[] {
+                    // BOTTOM QUAD (DOWN=+Y)
+                    x + offset*6 - clip, y + offset*3 - clip,
+                    x + offset*5 + clip, y + offset*3 - clip,
+                    x + offset*5 + clip, y + offset*2 + clip,
+                    x + offset*6 - clip, y + offset*2 + clip,
+                    // TOP
+                    x + offset*6 - clip, y + offset*3 - clip,
+                    x + offset*5 + clip, y + offset*3 - clip,
+                    x + offset*5 + clip, y + offset*2 + clip,
+                    x + offset*6 - clip, y + offset*2 + clip,
+                    // FRONT QUAD
+                    x + offset*5 + clip, y + offset*2 + clip,
+                    x + offset*6 - clip, y + offset*2 + clip,
+                    x + offset*6 - clip, y + offset*3 - clip,
+                    x + offset*5 + clip, y + offset*3 - clip,
+                    // BACK QUAD
+                    x + offset*6 - clip, y + offset*3 - clip,
+                    x + offset*5 + clip, y + offset*3 - clip,
+                    x + offset*5 + clip, y + offset*2 + clip,
+                    x + offset*6 - clip, y + offset*2 + clip,
+                    // LEFT QUAD
+                    x + offset*5 + clip, y + offset*2 + clip,
+                    x + offset*6 - clip, y + offset*2 + clip,
+                    x + offset*6 - clip, y + offset*3 - clip,
+                    x + offset*5 + clip, y + offset*3 - clip,
+                    // RIGHT QUAD
+                    x + offset*5 + clip, y + offset*2 + clip,
+                    x + offset*6 - clip, y + offset*2 + clip,
+                    x + offset*6 - clip, y + offset*3 - clip,
+                    x + offset*5 + clip, y + offset*3 - clip
+                };
+                
+            // Portal
+            case 15:
+                return new float[] {
+                    // BOTTOM QUAD (DOWN=+Y)
+                    x + offset*7 - clip, y + offset*3 - clip,
+                    x + offset*6 + clip, y + offset*3 - clip,
+                    x + offset*6 + clip, y + offset*2 + clip,
+                    x + offset*7 - clip, y + offset*2 + clip,
+                    // TOP
+                    x + offset*7 - clip, y + offset*3 - clip,
+                    x + offset*6 + clip, y + offset*3 - clip,
+                    x + offset*6 + clip, y + offset*2 + clip,
+                    x + offset*7 - clip, y + offset*2 + clip,
+                    // FRONT QUAD
+                    x + offset*6 + clip, y + offset*2 + clip,
+                    x + offset*7 - clip, y + offset*2 + clip,
+                    x + offset*7 - clip, y + offset*3 - clip,
+                    x + offset*6 + clip, y + offset*3 - clip,
+                    // BACK QUAD
+                    x + offset*7 - clip, y + offset*3 - clip,
+                    x + offset*6 + clip, y + offset*3 - clip,
+                    x + offset*6 + clip, y + offset*2 + clip,
+                    x + offset*7 - clip, y + offset*2 + clip,
+                    // LEFT QUAD
+                    x + offset*6 + clip, y + offset*2 + clip,
+                    x + offset*7 - clip, y + offset*2 + clip,
+                    x + offset*7 - clip, y + offset*3 - clip,
+                    x + offset*6 + clip, y + offset*3 - clip,
+                    // RIGHT QUAD
+                    x + offset*6 + clip, y + offset*2 + clip,
+                    x + offset*7 - clip, y + offset*2 + clip,
+                    x + offset*7 - clip, y + offset*3 - clip,
+                    x + offset*6 + clip, y + offset*3 - clip
                 };
                 
             default:

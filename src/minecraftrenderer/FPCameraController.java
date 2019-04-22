@@ -4,7 +4,7 @@
 * class: CS 4450 - Computer Graphics
 *
 * assignment: final program
-* date last modified: 4/16/2019
+* date last modified: 4/22/2019
 *
 * purpose: This program is the main class for the FPCameraController and it
 * controls all of the first person viewing functionality such as the camera,
@@ -34,6 +34,7 @@ public class FPCameraController {
     
     private float movementSpeed;
     private float mouseSensitivity;
+    private boolean isSurvival, isNether;
     
     // method: FPCameraController
     // purpose: this constructor creates the new FPCameraController object
@@ -42,8 +43,11 @@ public class FPCameraController {
         position = new Vector3f(x, y, z);
         lookPosition = new Vector3f(100f, 0f, 100f);
         
-        movementSpeed = 0.5f;
+        movementSpeed = 0.2f;
         mouseSensitivity = 0.075f;
+        
+        isSurvival = false;
+        isNether = false;
     }
     
     // method: rotateYaw
@@ -129,6 +133,14 @@ public class FPCameraController {
         position.y -= distance;
     }
     
+    // method: jump
+    // purpose: this method simulates a player jump 2 units up
+    private void jump() {
+        
+        System.out.println("Jump");
+        position.y -= 1;
+    }
+    
     // method: moveDown
     // purpose: this method moves the camera's position downwards
     public void moveDown(float distance) {
@@ -174,22 +186,53 @@ public class FPCameraController {
         if(Keyboard.isKeyDown(Keyboard.KEY_D) || Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
             camera.strafeRight(movementSpeed);
         
-        if(Keyboard.isKeyDown(Keyboard.KEY_SPACE))
-            camera.moveUp(movementSpeed);
-        
-        if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
-            camera.moveDown(movementSpeed);
-        
-        // Sprint Key on Left Mouse Click
-        if(Mouse.isButtonDown(0)) {
-            movementSpeed = 1.0f;
-        } else if(!Mouse.isButtonDown(0)) {
-            movementSpeed = 0.5f;
+        if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+            
+            if(isSurvival) {
+                camera.jump();
+            } else {
+                camera.moveUp(movementSpeed);
+            }
         }
         
-        // Generate new chunk
+        if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+            
+            if(!isSurvival) {
+                camera.moveDown(movementSpeed);
+            }
+        }
+        
+        if(Mouse.isButtonDown(0)) {
+            
+            if(isSurvival)
+                movementSpeed = 0.3f;
+            else
+                movementSpeed = 1f;
+        } else {
+            
+            if(isSurvival)
+                movementSpeed = 0.2f;
+            else
+                movementSpeed = 0.5f;
+        }
+        
+        // Toggle Survival
         if(Keyboard.isKeyDown(Keyboard.KEY_F1)) {
-            chunk = new Chunk(0, 0, 0);
+            isSurvival = true;
+        }
+        // Toggle Creative
+        if(Keyboard.isKeyDown(Keyboard.KEY_F2)) {
+            isSurvival = false;
+        }
+        // Overworld
+        if(Keyboard.isKeyDown(Keyboard.KEY_F3)) {
+            isNether = false;
+            chunk = new Chunk(0, 0, 0, false);
+        }
+        // Nether
+        if(Keyboard.isKeyDown(Keyboard.KEY_F4)) {
+            isNether = true;
+            chunk = new Chunk(0, 0, 0, true);
         }
     }
     
@@ -200,7 +243,7 @@ public class FPCameraController {
         Mouse.setGrabbed(true);
         
         camera = new FPCameraController(-100, -250, -100);
-        chunk = new Chunk(0, 0, 0);
+        chunk = new Chunk(0, 0, 0, false);
         
         float lastTime;
         long time = 0;
@@ -216,6 +259,10 @@ public class FPCameraController {
             glLoadIdentity();
             camera.lookThrough();
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            if(!isNether)
+                glClearColor(0.443f, 0.737f, 0.867f, 0.0f);
+            else
+                glClearColor(0.2f, 0.031f, 0.031f, 0.0f);
             glEnableClientState(GL_VERTEX_ARRAY);
             glEnableClientState(GL_COLOR_ARRAY);
             glEnable(GL_DEPTH_TEST);
@@ -223,10 +270,55 @@ public class FPCameraController {
             
             chunk.render();
             
+            if(isSurvival)
+                handleSurvival();
+            
             Display.update();
             Display.sync(60);
         }
         
         Display.destroy();
+    }
+
+    private void handleSurvival() {
+        
+        float max = 52;
+        int x = ((int) camera.position.x * -1) / 2;
+        int y = ((int) (camera.position.y + 80) * -1) / 2;
+        int z = ((int) camera.position.z * -1) / 2;
+        
+        Block currentBlock;
+                
+        System.out.printf("Player: <%d, %d, %d>\n", (int) camera.position.x, (int) camera.position.y, (int) camera.position.z);
+        
+        if(x > 100 || x < 0 || y > 100 || y < 0 || z > 100 || z < 0){
+        } else {
+                
+            for(int i = 53; i < chunk.CHUNK_SIZE; i++) {
+
+                currentBlock = chunk.Blocks[x][i][z];
+                if(currentBlock.y > max && currentBlock.getID() != 3 && currentBlock.getID() != 6 && currentBlock.getID() != 7 && currentBlock.getID() != 8)
+                    max = currentBlock.y;
+            }
+        }
+        
+        if(y > max + 1)
+            camera.moveDown(0.5f);
+        if(y <= max) {
+            camera.moveUp(2f);
+        }
+        
+        if(x >= 98)
+            camera.position.x = -196;
+        else if(x <= 0)
+            camera.position.x = -2;
+        if(y > 100)
+            camera.moveDown(2);
+        else if(y < 0)
+            camera.moveUp(2);
+        if(z >= 98)
+            camera.position.z = -196;
+        else if(z <= 0)
+            camera.position.z = -2;
     }
 }
