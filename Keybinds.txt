@@ -1,0 +1,25 @@
+Controls
+	W - Move forward
+	A - Strafe left
+	S - Move backwards
+	D - Strafe right
+	Spacebar - Variable (See Below)
+	Left Shift - Variable (See Below)
+	Left Mouse Button - Sprint
+	Mouse - Look
+
+F1 - Enable Survival Mode
+	Gravity, Collision detection, Universe Edge
+	Spacebar - Jump
+	Left Shift - None
+
+F2 - Enable Creative Mode (Default)
+	Creative Flight
+	Spacebar - Move upwards
+	Left Shift - Move downwards
+
+F3 - Generate Overworld (Default)
+	River Generation, Tree and Cactus Spawning
+
+F4 - Generate Nether
+	Lava Generation, Nether Portal, Glowstone and Netherquartz Spawning
